@@ -28,6 +28,8 @@ All objects live under the existing `live-pocket-fedora/` prefix in the bleeding
 4. Prints and exports dedupe metrics (`new_bytes`, `reused_bytes`).
 5. Publishes only missing/different chunk objects via `aws s3 sync --size-only`, then uploads immutable index/manifest/image objects and updates `refs/<ref>/latest.json`.
 
+Boot profile channel publishing is handled separately by `scripts/bootprofile-channel.sh` so compose metadata and boot profile metadata remain independent. See `docs/bootprofile-channel.md`.
+
 Publish is attempted on PR/main/dispatch only when standard repository secrets are available:
 
 - `R2_ACCESS_KEY_ID`
