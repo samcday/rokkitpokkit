@@ -43,6 +43,27 @@ on:
       compose_erofs_digest:
         description: casync digest for source EROFS image
         value: ${{ jobs.build.outputs.compose_erofs_digest }}
+      boot_profile_sha256:
+        description: SHA256 for generated boot profile binary artifact
+        value: ${{ jobs.build.outputs.boot_profile_sha256 }}
+      boot_profile_source_kind:
+        description: Rootfs source kind used in generated boot profile
+        value: ${{ jobs.build.outputs.boot_profile_source_kind }}
+      boot_profile_s3:
+        description: S3 coordinate for published boot profile binary
+        value: ${{ jobs.build.outputs.boot_profile_s3 }}
+      boot_profile_url:
+        description: Public URL for published boot profile binary
+        value: ${{ jobs.build.outputs.boot_profile_url }}
+      boot_profile_stable_pointer_url:
+        description: Stable boot profile pointer URL for pushes to main
+        value: ${{ jobs.build.outputs.boot_profile_stable_pointer_url }}
+      boot_profile_stable_pointer_updated:
+        description: Whether stable boot profile pointer was updated in this run
+        value: ${{ jobs.build.outputs.boot_profile_stable_pointer_updated }}
+      boot_profile_artifact_url:
+        description: GitHub artifact URL for compiled boot profile
+        value: ${{ jobs.build.outputs.boot_profile_artifact_url }}
       build_artifact_url:
         description: GitHub artifact URL for build output bundle
         value: ${{ jobs.build.outputs.build_artifact_url }}
@@ -65,6 +86,13 @@ jobs:
       compose_reused_chunk_count: ${{ steps.compose.outputs.compose_reused_chunk_count }}
       compose_reused_chunk_bytes: ${{ steps.compose.outputs.compose_reused_chunk_bytes }}
       compose_erofs_digest: ${{ steps.compose.outputs.compose_erofs_digest }}
+      boot_profile_sha256: ${{ steps.boot_profile.outputs.boot_profile_sha256 }}
+      boot_profile_source_kind: ${{ steps.boot_profile.outputs.boot_profile_source_kind }}
+      boot_profile_s3: ${{ steps.boot_profile.outputs.boot_profile_s3 }}
+      boot_profile_url: ${{ steps.boot_profile.outputs.boot_profile_url }}
+      boot_profile_stable_pointer_url: ${{ steps.boot_profile.outputs.boot_profile_stable_pointer_url }}
+      boot_profile_stable_pointer_updated: ${{ steps.boot_profile.outputs.boot_profile_stable_pointer_updated }}
+      boot_profile_artifact_url: ${{ steps.upload_boot_profile_artifact.outputs.artifact-url }}
       build_artifact_url: ${{ steps.upload_build_artifacts.outputs.artifact-url }}
 
     steps:
@@ -161,6 +189,40 @@ jobs:
               raise SystemExit("compose-manifest.json kind must be live-pocket-fedora.compose")
           PY
 
+      - name: Build and publish boot profile channel
+        id: boot_profile
+        env:
+          BOOT_PROFILE_ENABLE_PUBLISH: ${{ steps.compose.outputs.compose_publish_enabled }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          BOOT_PROFILE_BUCKET: ${{ secrets.R2_BUCKET }}
+          BOOT_PROFILE_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
+          BOOT_PROFILE_PUBLIC_BASE_URL: https://bleeding.fastboop.win
+          BOOT_PROFILE_OBJECT_PREFIX: live-pocket-fedora
+          BOOT_PROFILE_SOURCE_FILE: ./mkosi.output/live-pocket-fedora.ero
+          BOOT_PROFILE_SOURCE_CASYNC_INDEX: ${{ steps.compose.outputs.compose_index_url }}
+          BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE: ${{ steps.compose.outputs.compose_chunk_prefix_url }}
+        run: ./scripts/bootprofile-channel.sh
+
+      - name: Validate boot profile artifact
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          boot_profile_path = Path("${{ steps.boot_profile.outputs.boot_profile_path }}")
+          header = boot_profile_path.read_bytes()[:10]
+
+          if len(header) < 10:
+              raise SystemExit(f"{boot_profile_path} is too short")
+
+          if header[:8] != b"FBOOPROF":
+              raise SystemExit(f"{boot_profile_path} has invalid magic")
+
+          if int.from_bytes(header[8:10], "little") != 1:
+              raise SystemExit(f"{boot_profile_path} has unsupported format version")
+          PY
+
       - name: Upload build artifacts
         id: upload_build_artifacts
         uses: actions/upload-artifact@v4
@@ -175,4 +237,13 @@ jobs:
             ./mkosi.output/compose/*.casync-digest
             ./mkosi.output/compose/dedupe-stats.json
             ./mkosi.output/compose/compose-latest-pointer.json
+          if-no-files-found: error
+
+      - name: Upload boot profile artifact
+        id: upload_boot_profile_artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-pocket-fedora-bootpro
+          compression-level: 0
+          path: ${{ steps.boot_profile.outputs.boot_profile_path }}
           if-no-files-found: error
