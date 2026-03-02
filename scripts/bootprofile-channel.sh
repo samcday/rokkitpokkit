@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
-
 OUTPUT_DIR="${BOOT_PROFILE_OUTPUT_DIR:-mkosi.output/bootprofile}"
 BOOT_PROFILE_BASENAME="${BOOT_PROFILE_BASENAME:-live-pocket-fedora}"
 BOOT_PROFILE_ID="${BOOT_PROFILE_ID:-${BOOT_PROFILE_BASENAME}}"
@@ -11,7 +8,7 @@ BOOT_PROFILE_DISPLAY_NAME="${BOOT_PROFILE_DISPLAY_NAME:-${BOOT_PROFILE_ID}}"
 BOOT_PROFILE_MANIFEST_PATH="${OUTPUT_DIR}/${BOOT_PROFILE_BASENAME}.bootpro.json"
 BOOT_PROFILE_PATH="${OUTPUT_DIR}/${BOOT_PROFILE_BASENAME}.bootpro"
 BOOT_PROFILE_SHA256_PATH="${OUTPUT_DIR}/${BOOT_PROFILE_BASENAME}.bootpro.sha256"
-BOOT_PROFILE_ENCODER="${BOOT_PROFILE_ENCODER:-${REPO_ROOT}/scripts/bootprofile-encode.py}"
+BOOT_PROFILE_CLI="${BOOT_PROFILE_CLI:-fastboop-cli}"
 
 SOURCE_FILE_OVERRIDE="${BOOT_PROFILE_SOURCE_FILE:-}"
 SOURCE_CASYNC_INDEX="${BOOT_PROFILE_SOURCE_CASYNC_INDEX:-}"
@@ -152,24 +149,17 @@ with open(manifest_path, "w", encoding="utf-8") as f:
     f.write("\n")
 PY
 
-if [[ ! -f "${BOOT_PROFILE_ENCODER}" ]]; then
-    echo "missing boot profile encoder: ${BOOT_PROFILE_ENCODER}" >&2
+if [[ "${BOOT_PROFILE_CLI}" == */* ]]; then
+    if [[ ! -x "${BOOT_PROFILE_CLI}" ]]; then
+        echo "missing boot profile CLI executable: ${BOOT_PROFILE_CLI}; set BOOT_PROFILE_CLI to a fastboop-cli snapshot from fastboop main" >&2
+        exit 1
+    fi
+elif ! command -v "${BOOT_PROFILE_CLI}" >/dev/null 2>&1; then
+    echo "missing boot profile CLI command: ${BOOT_PROFILE_CLI}; set BOOT_PROFILE_CLI to a fastboop-cli snapshot from fastboop main" >&2
     exit 1
 fi
 
-BOOT_PROFILE_ENCODER_ARGS=(
-    --id "${BOOT_PROFILE_ID}"
-    --display-name "${BOOT_PROFILE_DISPLAY_NAME}"
-    --source-kind "${SOURCE_KIND}"
-    --source-value "${SOURCE_VALUE}"
-    --output "${BOOT_PROFILE_PATH}"
-)
-
-if [[ -n "${SOURCE_CHUNK_STORE}" ]]; then
-    BOOT_PROFILE_ENCODER_ARGS+=(--source-chunk-store "${SOURCE_CHUNK_STORE}")
-fi
-
-python3 "${BOOT_PROFILE_ENCODER}" "${BOOT_PROFILE_ENCODER_ARGS[@]}"
+"${BOOT_PROFILE_CLI}" bootprofile create "${BOOT_PROFILE_MANIFEST_PATH}" --output "${BOOT_PROFILE_PATH}"
 
 BOOT_PROFILE_SHA256="$(sha256sum "${BOOT_PROFILE_PATH}" | cut -d' ' -f1)"
 BOOT_PROFILE_BYTES="$(stat -c '%s' "${BOOT_PROFILE_PATH}")"

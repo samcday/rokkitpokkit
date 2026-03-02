@@ -105,12 +105,44 @@ jobs:
             erofs-utils \
             systemd-ukify \
             casync \
+            clang \
+            device-tree-compiler \
+            libusb-1.0-0-dev \
+            linux-libc-dev \
+            musl-tools \
+            pkg-config \
             python3-pip
 
           if ! command -v aws >/dev/null 2>&1; then
             python3 -m pip install --user --break-system-packages awscli
             echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           fi
+
+      - name: Set up Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: aarch64-unknown-linux-musl
+
+      - name: Set up musl kernel headers
+        run: |
+          sudo mkdir -p /usr/include/$(uname -m)-linux-musl
+          sudo ln -sf /usr/include/linux /usr/include/$(uname -m)-linux-musl/linux
+          sudo ln -sf /usr/include/asm-generic /usr/include/$(uname -m)-linux-musl/asm-generic
+          if [ -d /usr/include/$(uname -m)-linux-gnu/asm ]; then
+            sudo ln -sf /usr/include/$(uname -m)-linux-gnu/asm /usr/include/$(uname -m)-linux-musl/asm
+          elif [ -d /usr/include/asm ]; then
+            sudo ln -sf /usr/include/asm /usr/include/$(uname -m)-linux-musl/asm
+          fi
+          if [ ! -e /usr/include/asm ]; then
+            sudo ln -sf /usr/include/asm-generic /usr/include/asm
+          fi
+
+      - name: Build fastboop-cli snapshot from main
+        id: fastboop_cli
+        run: |
+          git clone --depth 1 --branch main https://github.com/samcday/fastboop.git .fastboop-main
+          cargo build --release --locked -p fastboop-cli --manifest-path .fastboop-main/Cargo.toml
+          echo "fastboop_cli_path=${GITHUB_WORKSPACE}/.fastboop-main/target/release/fastboop-cli" >> "$GITHUB_OUTPUT"
 
       - name: Restore casync chunk store cache
         uses: actions/cache@v4
@@ -193,6 +225,7 @@ jobs:
         id: boot_profile
         env:
           BOOT_PROFILE_ENABLE_PUBLISH: ${{ steps.compose.outputs.compose_publish_enabled }}
+          BOOT_PROFILE_CLI: ${{ steps.fastboop_cli.outputs.fastboop_cli_path }}
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: auto
@@ -207,21 +240,10 @@ jobs:
 
       - name: Validate boot profile artifact
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          boot_profile_path = Path("${{ steps.boot_profile.outputs.boot_profile_path }}")
-          header = boot_profile_path.read_bytes()[:10]
-
-          if len(header) < 10:
-              raise SystemExit(f"{boot_profile_path} is too short")
-
-          if header[:8] != b"FBOOPROF":
-              raise SystemExit(f"{boot_profile_path} has invalid magic")
-
-          if int.from_bytes(header[8:10], "little") != 1:
-              raise SystemExit(f"{boot_profile_path} has unsupported format version")
-          PY
+          "${{ steps.fastboop_cli.outputs.fastboop_cli_path }}" \
+            bootprofile show "${{ steps.boot_profile.outputs.boot_profile_path }}" \
+            --output /tmp/live-pocket-fedora.bootpro.yaml
+          test -s /tmp/live-pocket-fedora.bootpro.yaml
 
       - name: Upload build artifacts
         id: upload_build_artifacts
