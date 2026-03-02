@@ -105,12 +105,7 @@ jobs:
             erofs-utils \
             systemd-ukify \
             casync \
-            clang \
-            device-tree-compiler \
-            libusb-1.0-0-dev \
-            linux-libc-dev \
-            musl-tools \
-            pkg-config \
+            curl \
             python3-pip
 
           if ! command -v aws >/dev/null 2>&1; then
@@ -118,31 +113,34 @@ jobs:
             echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           fi
 
-      - name: Set up Rust toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          target: aarch64-unknown-linux-musl
-
-      - name: Set up musl kernel headers
-        run: |
-          sudo mkdir -p /usr/include/$(uname -m)-linux-musl
-          sudo ln -sf /usr/include/linux /usr/include/$(uname -m)-linux-musl/linux
-          sudo ln -sf /usr/include/asm-generic /usr/include/$(uname -m)-linux-musl/asm-generic
-          if [ -d /usr/include/$(uname -m)-linux-gnu/asm ]; then
-            sudo ln -sf /usr/include/$(uname -m)-linux-gnu/asm /usr/include/$(uname -m)-linux-musl/asm
-          elif [ -d /usr/include/asm ]; then
-            sudo ln -sf /usr/include/asm /usr/include/$(uname -m)-linux-musl/asm
-          fi
-          if [ ! -e /usr/include/asm ]; then
-            sudo ln -sf /usr/include/asm-generic /usr/include/asm
-          fi
-
-      - name: Build fastboop-cli snapshot from main
+      - name: Download fastboop-cli v0.0.1-rc.2
         id: fastboop_cli
         run: |
-          git clone --depth 1 --branch main https://github.com/samcday/fastboop.git .fastboop-main
-          cargo build --release --locked -p fastboop-cli --manifest-path .fastboop-main/Cargo.toml
-          echo "fastboop_cli_path=${GITHUB_WORKSPACE}/.fastboop-main/target/release/fastboop-cli" >> "$GITHUB_OUTPUT"
+          FASTBOOP_CLI_VERSION="v0.0.1-rc.2"
+
+          case "${RUNNER_ARCH}" in
+            ARM64)
+              FASTBOOP_CLI_TARGET="aarch64-unknown-linux-musl"
+              FASTBOOP_CLI_SHA256="8875b929f8f668479fb2ceb691a727326e01fad23205886bd731f27663b598a2"
+              ;;
+            X64)
+              FASTBOOP_CLI_TARGET="x86_64-unknown-linux-musl"
+              FASTBOOP_CLI_SHA256="a45cbbecf007a50bf4c55bec3bb7f049bb6548b2cb171b78988ab52e0fd49d3a"
+              ;;
+            *)
+              echo "unsupported runner architecture for fastboop-cli release asset: ${RUNNER_ARCH}" >&2
+              exit 1
+              ;;
+          esac
+
+          FASTBOOP_CLI_ASSET="fastboop-cli-${FASTBOOP_CLI_TARGET}.tar.gz"
+          FASTBOOP_CLI_URL="https://github.com/samcday/fastboop/releases/download/${FASTBOOP_CLI_VERSION}/${FASTBOOP_CLI_ASSET}"
+          mkdir -p .fastboop-release
+          curl -fsSL --retry 5 --retry-delay 2 --retry-connrefused "${FASTBOOP_CLI_URL}" -o ".fastboop-release/${FASTBOOP_CLI_ASSET}"
+          echo "${FASTBOOP_CLI_SHA256}  .fastboop-release/${FASTBOOP_CLI_ASSET}" | sha256sum -c -
+          tar -xzf ".fastboop-release/${FASTBOOP_CLI_ASSET}" -C .fastboop-release
+          chmod +x .fastboop-release/fastboop-cli
+          echo "fastboop_cli_path=${GITHUB_WORKSPACE}/.fastboop-release/fastboop-cli" >> "$GITHUB_OUTPUT"
 
       - name: Restore casync chunk store cache
         uses: actions/cache@v4

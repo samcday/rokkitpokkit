@@ -151,11 +151,11 @@ PY
 
 if [[ "${BOOT_PROFILE_CLI}" == */* ]]; then
     if [[ ! -x "${BOOT_PROFILE_CLI}" ]]; then
-        echo "missing boot profile CLI executable: ${BOOT_PROFILE_CLI}; set BOOT_PROFILE_CLI to a fastboop-cli snapshot from fastboop main" >&2
+        echo "missing boot profile CLI executable: ${BOOT_PROFILE_CLI}; set BOOT_PROFILE_CLI to a fastboop-cli binary" >&2
         exit 1
     fi
 elif ! command -v "${BOOT_PROFILE_CLI}" >/dev/null 2>&1; then
-    echo "missing boot profile CLI command: ${BOOT_PROFILE_CLI}; set BOOT_PROFILE_CLI to a fastboop-cli snapshot from fastboop main" >&2
+    echo "missing boot profile CLI command: ${BOOT_PROFILE_CLI}; set BOOT_PROFILE_CLI to a fastboop-cli binary" >&2
     exit 1
 fi
 
