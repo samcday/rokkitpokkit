@@ -1,4 +1,4 @@
-# live-pocket-fedora
+# rokkitpokkit
 
 Some [mkosi][] configs to prepare an image that is suitable to live boot on
 pocket computers, using [smoo][] + [fastboop][].

@@ -31,8 +31,8 @@ if [[ -z "$release" || -z "$architecture" ]]; then
     exit 1
 fi
 
-ref="${OSTREE_REF:-live-pocket-fedora/${release}/${architecture}}"
-stateroot="${OSTREE_STATEROOT:-live-pocket-fedora}"
+ref="${OSTREE_REF:-rokkitpokkit/${release}/${architecture}}"
+stateroot="${OSTREE_STATEROOT:-rokkitpokkit}"
 
 compress=
 

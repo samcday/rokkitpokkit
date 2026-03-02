@@ -168,7 +168,7 @@ jobs:
           fi
 
           source_file="${ero_files[0]}"
-          target_file="./mkosi.output/live-pocket-fedora.ero"
+          target_file="./mkosi.output/rokkitpokkit.ero"
 
           if [ "${source_file}" != "${target_file}" ]; then
             cp "${source_file}" "${target_file}"
@@ -184,7 +184,7 @@ jobs:
           COMPOSE_BUCKET: ${{ secrets.R2_BUCKET }}
           COMPOSE_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
           COMPOSE_PUBLIC_BASE_URL: https://bleeding.fastboop.win
-          COMPOSE_OBJECT_PREFIX: live-pocket-fedora
+          COMPOSE_OBJECT_PREFIX: rokkitpokkit
           COMPOSE_LOCAL_STORE_DIR: .casync-cache/store.castr
           COMPOSE_BASE_LINEAGE_REF: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
           COMPOSE_USE_SUDO: 1
@@ -215,8 +215,8 @@ jobs:
           if data.get("schema_version") != 1:
               raise SystemExit("compose-manifest.json schema_version must be 1")
 
-          if data.get("kind") != "live-pocket-fedora.compose":
-              raise SystemExit("compose-manifest.json kind must be live-pocket-fedora.compose")
+          if data.get("kind") != "rokkitpokkit.compose":
+              raise SystemExit("compose-manifest.json kind must be rokkitpokkit.compose")
           PY
 
       - name: Build and publish boot profile channel
@@ -230,8 +230,8 @@ jobs:
           BOOT_PROFILE_BUCKET: ${{ secrets.R2_BUCKET }}
           BOOT_PROFILE_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
           BOOT_PROFILE_PUBLIC_BASE_URL: https://bleeding.fastboop.win
-          BOOT_PROFILE_OBJECT_PREFIX: live-pocket-fedora
-          BOOT_PROFILE_SOURCE_FILE: ./mkosi.output/live-pocket-fedora.ero
+          BOOT_PROFILE_OBJECT_PREFIX: rokkitpokkit
+          BOOT_PROFILE_SOURCE_FILE: ./mkosi.output/rokkitpokkit.ero
           BOOT_PROFILE_SOURCE_CASYNC_INDEX: ${{ steps.compose.outputs.compose_index_url }}
           BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE: ${{ steps.compose.outputs.compose_chunk_prefix_url }}
         run: ./scripts/bootprofile-channel.sh
@@ -240,17 +240,17 @@ jobs:
         run: |
           "${{ steps.fastboop_cli.outputs.fastboop_cli_path }}" \
             bootprofile show "${{ steps.boot_profile.outputs.boot_profile_path }}" \
-            --output /tmp/live-pocket-fedora.bootpro.yaml
-          test -s /tmp/live-pocket-fedora.bootpro.yaml
+            --output /tmp/rokkitpokkit.bootpro.yaml
+          test -s /tmp/rokkitpokkit.bootpro.yaml
 
       - name: Upload build artifacts
         id: upload_build_artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: live-pocket-fedora
+          name: rokkitpokkit
           compression-level: 0
           path: |
-            ./mkosi.output/live-pocket-fedora.ero
+            ./mkosi.output/rokkitpokkit.ero
             ./mkosi.output/compose/compose-manifest.json
             ./mkosi.output/compose/*.caibx
             ./mkosi.output/compose/*.sha256
@@ -263,7 +263,7 @@ jobs:
         id: upload_boot_profile_artifact
         uses: actions/upload-artifact@v4
         with:
-          name: live-pocket-fedora-bootpro
+          name: rokkitpokkit-bootpro
           compression-level: 0
           path: ${{ steps.boot_profile.outputs.boot_profile_path }}
           if-no-files-found: error

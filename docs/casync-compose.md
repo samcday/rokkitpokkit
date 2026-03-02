@@ -4,13 +4,13 @@ This repository publishes a deduplicated "Compose Thing" for branch and PR build
 
 ## Object layout
 
-All objects live under the existing `live-pocket-fedora/` prefix in the bleeding bucket:
+All objects live under the existing `rokkitpokkit/` prefix in the bleeding bucket:
 
-- `live-pocket-fedora/casync/chunks/` - shared casync chunk store layout (`.castr` compatible)
-- `live-pocket-fedora/casync/indexes/compose-<run>-<attempt>-<sha>.caibx` - immutable blob index per build
-- `live-pocket-fedora/casync/manifests/<run>-<attempt>-<sha>.json` - immutable compose manifest per build
-- `live-pocket-fedora/casync/refs/<ref>/latest.json` - mutable lineage pointer per ref
-- `live-pocket-fedora/images/<run>-<attempt>-<sha>.ero` - canonical EROFS image per build
+- `rokkitpokkit/casync/chunks/` - shared casync chunk store layout (`.castr` compatible)
+- `rokkitpokkit/casync/indexes/compose-<run>-<attempt>-<sha>.caibx` - immutable blob index per build
+- `rokkitpokkit/casync/manifests/<run>-<attempt>-<sha>.json` - immutable compose manifest per build
+- `rokkitpokkit/casync/refs/<ref>/latest.json` - mutable lineage pointer per ref
+- `rokkitpokkit/images/<run>-<attempt>-<sha>.ero` - canonical EROFS image per build
 
 ## CI behavior
 
@@ -19,7 +19,7 @@ All objects live under the existing `live-pocket-fedora/` prefix in the bleeding
 1. Restores local casync chunk cache from `actions/cache` (`.casync-cache/store.castr`).
 2. Builds an EROFS image and indexes it directly with casync.
    - `scripts/casync-compose.sh` resolves the source image in this order:
-     `COMPOSE_EROFS_IMAGE`, `mkosi.output/live-pocket-fedora.ero`, `mkosi.output/image.ero`, then a single `mkosi.output/*.ero` match.
+     `COMPOSE_EROFS_IMAGE`, `mkosi.output/rokkitpokkit.ero`, `mkosi.output/image.ero`, then a single `mkosi.output/*.ero` match.
    - Uses `COMPOSE_CHUNK_SIZE` (default `262144:1048576:4194304`) to keep chunk cardinality manageable in CI.
 3. Verifies integrity:
    - `casync digest` of the resolved EROFS image equals digest of generated `.caibx`.

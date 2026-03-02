@@ -4,10 +4,10 @@ Boot profile channel publication is independent from casync compose publication.
 
 ## Object layout
 
-All boot profile channel objects live under the existing `live-pocket-fedora/` prefix:
+All boot profile channel objects live under the existing `rokkitpokkit/` prefix:
 
-- `live-pocket-fedora/bootprofiles/<run>-<attempt>-<sha>.bootpro` - immutable boot profile binary per build
-- `live-pocket-fedora/channels/stable.bootpro` - mutable stable boot profile pointer updated by pushes to `main`
+- `rokkitpokkit/bootprofiles/<run>-<attempt>-<sha>.bootpro` - immutable boot profile binary per build
+- `rokkitpokkit/channels/stable.bootpro` - mutable stable boot profile pointer updated by pushes to `main`
 
 ## CI behavior
 
@@ -23,9 +23,9 @@ The boot profile script:
    - uses casync index + chunk-store URLs when provided
    - otherwise falls back to a local EROFS file path
 2. Writes boot profile artifacts to `mkosi.output/bootprofile/`:
-   - `live-pocket-fedora.bootpro.json`
-   - `live-pocket-fedora.bootpro`
-   - `live-pocket-fedora.bootpro.sha256`
+   - `rokkitpokkit.bootpro.json`
+   - `rokkitpokkit.bootpro`
+   - `rokkitpokkit.bootpro.sha256`
 3. Publishes the immutable boot profile object when publish is enabled.
 4. Updates `channels/stable.bootpro` on pushes to `main`.
 
@@ -71,7 +71,7 @@ chmod +x .tools/fastboop-cli
 sudo mkosi -f --profile erofs-lz4,phosh,embedded-firmware,precompile-akmods,ostree
 BOOT_PROFILE_CLI=./.tools/fastboop-cli \
 BOOT_PROFILE_ENABLE_PUBLISH=0 \
-BOOT_PROFILE_SOURCE_FILE=./mkosi.output/live-pocket-fedora.ero \
+BOOT_PROFILE_SOURCE_FILE=./mkosi.output/rokkitpokkit.ero \
 ./scripts/bootprofile-channel.sh
 ```
 
@@ -84,8 +84,8 @@ export BOOT_PROFILE_BUCKET=...
 export BOOT_PROFILE_ENDPOINT_URL=...
 export BOOT_PROFILE_PUBLIC_BASE_URL=https://bleeding.fastboop.win
 export BOOT_PROFILE_ENABLE_PUBLISH=1
-export BOOT_PROFILE_SOURCE_CASYNC_INDEX=https://bleeding.fastboop.win/live-pocket-fedora/casync/indexes/compose-<build>.caibx
-export BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE=https://bleeding.fastboop.win/live-pocket-fedora/casync/chunks/
+export BOOT_PROFILE_SOURCE_CASYNC_INDEX=https://bleeding.fastboop.win/rokkitpokkit/casync/indexes/compose-<build>.caibx
+export BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE=https://bleeding.fastboop.win/rokkitpokkit/casync/chunks/
 export BOOT_PROFILE_CLI=./.tools/fastboop-cli
 ./scripts/bootprofile-channel.sh
 ```

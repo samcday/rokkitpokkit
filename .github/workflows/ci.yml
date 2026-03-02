@@ -80,10 +80,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: live-pocket-fedora
+          name: rokkitpokkit
           path: mkosi.output/
 
-      - name: Upload live-pocket-fedora.ero to R2
+      - name: Upload rokkitpokkit.ero to R2
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -92,11 +92,11 @@ jobs:
           R2_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
         run: |
           stamp="$(date -u +%Y%m%d)"
-          object_key="live-pocket-fedora/${stamp}.ero"
+          object_key="rokkitpokkit/${stamp}.ero"
           aws s3api put-object \
             --bucket "${R2_BUCKET}" \
             --key "${object_key}" \
-            --body "mkosi.output/live-pocket-fedora.ero" \
+            --body "mkosi.output/rokkitpokkit.ero" \
             --content-type "application/octet-stream" \
             --endpoint-url "${R2_ENDPOINT_URL}"
 

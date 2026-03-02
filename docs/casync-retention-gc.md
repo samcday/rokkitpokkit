@@ -6,7 +6,7 @@ This plan keeps compose history traceable while safely reclaiming unreachable ch
 
 Protect these objects from deletion:
 
-- All `live-pocket-fedora/casync/refs/*/latest.json` pointers.
+- All `rokkitpokkit/casync/refs/*/latest.json` pointers.
 - All manifests and indexes referenced by protected pointers.
 - All manifests and indexes newer than 30 days.
 - At least the newest 20 manifests per ref, even if older than 30 days.

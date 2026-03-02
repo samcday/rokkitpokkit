@@ -21,8 +21,8 @@ locals {
   r2_bucket_resource = "com.cloudflare.edge.r2.bucket.${var.account_id}_default_${var.r2_bucket_name}"
 }
 
-resource "cloudflare_api_token" "live_pocket_fedora_upload" {
-  name = "live-pocket-fedora-r2-upload"
+resource "cloudflare_api_token" "rokkitpokkit_upload" {
+  name = "rokkitpokkit-r2-upload"
 
   lifecycle {
     precondition {
@@ -45,13 +45,13 @@ resource "cloudflare_api_token" "live_pocket_fedora_upload" {
 resource "github_actions_secret" "r2_access_key_id" {
   repository      = var.github_repo
   secret_name     = "R2_ACCESS_KEY_ID"
-  plaintext_value = cloudflare_api_token.live_pocket_fedora_upload.id
+  plaintext_value = cloudflare_api_token.rokkitpokkit_upload.id
 }
 
 resource "github_actions_secret" "r2_secret_access_key" {
   repository      = var.github_repo
   secret_name     = "R2_SECRET_ACCESS_KEY"
-  plaintext_value = sha256(cloudflare_api_token.live_pocket_fedora_upload.value)
+  plaintext_value = sha256(cloudflare_api_token.rokkitpokkit_upload.value)
 }
 
 resource "github_actions_secret" "r2_bucket" {
