@@ -2,7 +2,7 @@
 set -euo pipefail
 
 OUTPUT_DIR="${BOOT_PROFILE_OUTPUT_DIR:-mkosi.output/bootprofile}"
-BOOT_PROFILE_BASENAME="${BOOT_PROFILE_BASENAME:-live-pocket-fedora}"
+BOOT_PROFILE_BASENAME="${BOOT_PROFILE_BASENAME:-rokkitpokkit}"
 BOOT_PROFILE_ID="${BOOT_PROFILE_ID:-${BOOT_PROFILE_BASENAME}}"
 BOOT_PROFILE_DISPLAY_NAME="${BOOT_PROFILE_DISPLAY_NAME:-${BOOT_PROFILE_ID}}"
 BOOT_PROFILE_MANIFEST_PATH="${OUTPUT_DIR}/${BOOT_PROFILE_BASENAME}.bootpro.json"
@@ -14,7 +14,7 @@ SOURCE_FILE_OVERRIDE="${BOOT_PROFILE_SOURCE_FILE:-}"
 SOURCE_CASYNC_INDEX="${BOOT_PROFILE_SOURCE_CASYNC_INDEX:-}"
 SOURCE_CASYNC_CHUNK_STORE="${BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE:-}"
 
-OBJECT_PREFIX="${BOOT_PROFILE_OBJECT_PREFIX:-live-pocket-fedora}"
+OBJECT_PREFIX="${BOOT_PROFILE_OBJECT_PREFIX:-rokkitpokkit}"
 BOOT_PROFILE_PREFIX="${BOOT_PROFILE_PREFIX:-${OBJECT_PREFIX}/bootprofiles}"
 STABLE_POINTER_KEY="${BOOT_PROFILE_STABLE_POINTER_KEY:-${OBJECT_PREFIX}/channels/stable.bootpro}"
 
@@ -70,7 +70,7 @@ resolve_source_file() {
         return 1
     fi
 
-    for candidate in "mkosi.output/live-pocket-fedora.ero" "mkosi.output/image.ero"; do
+    for candidate in "mkosi.output/rokkitpokkit.ero" "mkosi.output/image.ero"; do
         if [[ -f "${candidate}" ]]; then
             printf '%s\n' "${candidate}"
             return 0
@@ -91,7 +91,7 @@ resolve_source_file() {
         return 1
     fi
 
-    echo "missing boot profile source file: expected mkosi.output/live-pocket-fedora.ero or mkosi.output/image.ero" >&2
+    echo "missing boot profile source file: expected mkosi.output/rokkitpokkit.ero or mkosi.output/image.ero" >&2
     return 1
 }
 

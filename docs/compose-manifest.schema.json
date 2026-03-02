@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://live-pocket-fedora/docs/compose-manifest.schema.json",
-  "title": "live-pocket-fedora compose manifest",
+  "$id": "https://rokkitpokkit/docs/compose-manifest.schema.json",
+  "title": "rokkitpokkit compose manifest",
   "type": "object",
   "required": [
     "schema_version",
@@ -19,7 +19,7 @@
     },
     "kind": {
       "type": "string",
-      "const": "live-pocket-fedora.compose"
+      "const": "rokkitpokkit.compose"
     },
     "build": {
       "type": "object",

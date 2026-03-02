@@ -6,7 +6,7 @@ OUTPUT_DIR="${COMPOSE_OUTPUT_DIR:-mkosi.output/compose}"
 LOCAL_STORE_DIR="${COMPOSE_LOCAL_STORE_DIR:-.casync-cache/store.castr}"
 CHUNK_SIZE="${COMPOSE_CHUNK_SIZE:-262144:1048576:4194304}"
 
-OBJECT_PREFIX="${COMPOSE_OBJECT_PREFIX:-live-pocket-fedora}"
+OBJECT_PREFIX="${COMPOSE_OBJECT_PREFIX:-rokkitpokkit}"
 CHUNK_PREFIX="${COMPOSE_CHUNK_PREFIX:-${OBJECT_PREFIX}/casync/chunks}"
 INDEX_PREFIX="${COMPOSE_INDEX_PREFIX:-${OBJECT_PREFIX}/casync/indexes}"
 MANIFEST_PREFIX="${COMPOSE_MANIFEST_PREFIX:-${OBJECT_PREFIX}/casync/manifests}"
@@ -19,7 +19,7 @@ BUCKET="${COMPOSE_BUCKET:-}"
 ENDPOINT_URL="${COMPOSE_ENDPOINT_URL:-${R2_ENDPOINT_URL:-}}"
 USE_SUDO_CASYNC_RAW="${COMPOSE_USE_SUDO:-0}"
 
-REPO="${GITHUB_REPOSITORY:-local/live-pocket-fedora}"
+REPO="${GITHUB_REPOSITORY:-local/rokkitpokkit}"
 EVENT_NAME="${GITHUB_EVENT_NAME:-local}"
 TARGET_REF="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-local}}"
 BASE_LINEAGE_REF="${COMPOSE_BASE_LINEAGE_REF:-${GITHUB_BASE_REF:-${GITHUB_REF_NAME:-main}}}"
@@ -127,7 +127,7 @@ resolve_erofs_image() {
         return 1
     fi
 
-    for candidate in "mkosi.output/live-pocket-fedora.ero" "mkosi.output/image.ero"; do
+    for candidate in "mkosi.output/rokkitpokkit.ero" "mkosi.output/image.ero"; do
         if [[ -f "${candidate}" ]]; then
             printf '%s\n' "${candidate}"
             return 0
@@ -148,7 +148,7 @@ resolve_erofs_image() {
         return 1
     fi
 
-    echo "missing erofs image: expected mkosi.output/live-pocket-fedora.ero or mkosi.output/image.ero" >&2
+    echo "missing erofs image: expected mkosi.output/rokkitpokkit.ero or mkosi.output/image.ero" >&2
     return 1
 }
 
@@ -416,7 +416,7 @@ def maybe(value):
 
 manifest = {
     "schema_version": 1,
-    "kind": "live-pocket-fedora.compose",
+    "kind": "rokkitpokkit.compose",
     "build": {
         "repository": os.environ["REPO"],
         "workflow": os.environ["WORKFLOW_NAME"],

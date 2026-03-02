@@ -19,7 +19,7 @@ variable "github_owner" {
 variable "github_repo" {
   type        = string
   description = "GitHub repository name."
-  default     = "live-pocket-fedora"
+  default     = "rokkitpokkit"
 }
 
 variable "state_passphrase" {
