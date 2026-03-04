@@ -139,8 +139,8 @@ jobs:
           curl -fsSL --retry 5 --retry-delay 2 --retry-connrefused "${FASTBOOP_CLI_URL}" -o ".fastboop-release/${FASTBOOP_CLI_ASSET}"
           echo "${FASTBOOP_CLI_SHA256}  .fastboop-release/${FASTBOOP_CLI_ASSET}" | sha256sum -c -
           tar -xzf ".fastboop-release/${FASTBOOP_CLI_ASSET}" -C .fastboop-release
-          chmod +x .fastboop-release/fastboop-cli
-          echo "fastboop_cli_path=${GITHUB_WORKSPACE}/.fastboop-release/fastboop-cli" >> "$GITHUB_OUTPUT"
+          chmod +x .fastboop-release/fastboop
+          echo "fastboop_cli_path=${GITHUB_WORKSPACE}/.fastboop-release/fastboop" >> "$GITHUB_OUTPUT"
 
       - name: Restore casync chunk store cache
         uses: actions/cache@v4
