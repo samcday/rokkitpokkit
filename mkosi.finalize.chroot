@@ -8,7 +8,7 @@ if [[ "${PROFILES:-}" == *"precompile-akmods"* ]]; then
     akmods --force --kernels $(ls /usr/lib/modules/)
 fi
 
-if [[ "${PROFILES:-}" == *"embedded-firmware"* ]]; then
+if [[ "${PROFILES:-}" == *"sdm845-embedded-firmware"* ]]; then
     firmware_repo=""
 
     if [[ -d "${SRCDIR}/firmware-oneplus-sdm845/lib/firmware" ]]; then
@@ -21,10 +21,35 @@ if [[ "${PROFILES:-}" == *"embedded-firmware"* ]]; then
     fi
 
     mkdir -p /usr/lib/firmware/updates/
-    cp -R ${firmware_repo}/lib/firmware/postmarketos/* /usr/lib/firmware/updates/
-    cp -R ${firmware_repo}/lib/firmware/qcom /usr/lib/firmware/
-    cp -R ${firmware_repo}/lib/firmware/qca /usr/lib/firmware/
-    touch /usr/lib/firmware/.embedded-firmware
+    cp -R "${firmware_repo}/lib/firmware/postmarketos/." /usr/lib/firmware/updates/
+    cp -R "${firmware_repo}/lib/firmware/qcom" /usr/lib/firmware/
+    cp -R "${firmware_repo}/lib/firmware/qca" /usr/lib/firmware/
+
+    legacy_qcom_dir="/usr/lib/firmware/qcom/sdm845/oneplus6"
+    mainline_qcom_dir="/usr/lib/firmware/qcom/sdm845/OnePlus/enchilada"
+
+    if [[ -d "${legacy_qcom_dir}" ]] && [[ ! -e "${mainline_qcom_dir}" ]]; then
+        mkdir -p "$(dirname "${mainline_qcom_dir}")"
+        mv "${legacy_qcom_dir}" "${mainline_qcom_dir}"
+    fi
+
+    if [[ -d "${mainline_qcom_dir}" ]] && [[ ! -e "${legacy_qcom_dir}" ]]; then
+        ln -s "OnePlus/enchilada" "${legacy_qcom_dir}"
+    fi
+
+    legacy_qca_dir="/usr/lib/firmware/qca/oneplus6"
+    mainline_qca_dir="/usr/lib/firmware/qca/OnePlus/enchilada"
+
+    if [[ -d "${legacy_qca_dir}" ]] && [[ ! -e "${mainline_qca_dir}" ]]; then
+        mkdir -p "$(dirname "${mainline_qca_dir}")"
+        mv "${legacy_qca_dir}" "${mainline_qca_dir}"
+    fi
+
+    if [[ -d "${mainline_qca_dir}" ]] && [[ ! -e "${legacy_qca_dir}" ]]; then
+        ln -s "OnePlus/enchilada" "${legacy_qca_dir}"
+    fi
+
+    touch /usr/lib/firmware/.sdm845-embedded-firmware
 fi
 
 groupadd -g 1000 user && \

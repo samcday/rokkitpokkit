@@ -155,7 +155,7 @@ jobs:
 
       - name: Build image
         run: |
-          sudo mkosi -f --profile erofs-lz4,phosh,embedded-firmware,precompile-akmods,ostree
+          sudo mkosi -f --profile erofs-lz4,phosh,sdm845-embedded-firmware,precompile-akmods,ostree
 
       - name: Normalize .ero artifact filename
         run: |

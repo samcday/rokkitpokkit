@@ -68,7 +68,7 @@ echo "${FASTBOOP_CLI_SHA256}  .tools/fastboop-cli-${FASTBOOP_CLI_TARGET}.tar.gz"
 tar -xzf ".tools/fastboop-cli-${FASTBOOP_CLI_TARGET}.tar.gz" -C .tools
 chmod +x .tools/fastboop-cli
 
-sudo mkosi -f --profile erofs-lz4,phosh,embedded-firmware,precompile-akmods,ostree
+sudo mkosi -f --profile erofs-lz4,phosh,sdm845-embedded-firmware,precompile-akmods,ostree
 BOOT_PROFILE_CLI=./.tools/fastboop-cli \
 BOOT_PROFILE_ENABLE_PUBLISH=0 \
 BOOT_PROFILE_SOURCE_FILE=./mkosi.output/rokkitpokkit.ero \

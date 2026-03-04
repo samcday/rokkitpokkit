@@ -2,21 +2,34 @@
 set -ueo pipefail
 
 SRCDIR="${SRCDIR:-$PWD}"
+FIRMWARE_REPO_URL="https://gitlab.com/sdm845-mainline/firmware-oneplus-sdm845"
+FIRMWARE_COMMIT="176ca713448c5237a983fb1f158cf3a5c251d775"
 
-if [[ "${PROFILES:-}" == *"droid-juicer"* ]] && [[ "${PROFILES:-}" == *"embedded-firmware"* ]]; then
-    echo "Profiles embedded-firmware and droid-juicer are mutually exclusive." >&2
+if [[ "${PROFILES:-}" == *"droid-juicer"* ]] && [[ "${PROFILES:-}" == *"sdm845-embedded-firmware"* ]]; then
+    echo "Profiles sdm845-embedded-firmware and droid-juicer are mutually exclusive." >&2
     exit 1
 fi
 
-if [[ "${PROFILES:-}" == *"embedded-firmware"* ]]; then
+if [[ "${PROFILES:-}" == *"sdm845-embedded-firmware"* ]]; then
     if [[ -d "${SRCDIR}/firmware-oneplus-sdm845/lib/firmware" ]]; then
         exit 0
     fi
 
     firmware_dir="${SRCDIR}/mkosi.cache/firmware-oneplus-sdm845"
 
-    if [[ ! -d "${firmware_dir}/lib/firmware" ]]; then
+    if [[ -e "${firmware_dir}" ]] && [[ ! -d "${firmware_dir}/.git" ]]; then
+        echo "Firmware cache exists but is not a git checkout: ${firmware_dir}" >&2
+        exit 1
+    fi
+
+    if [[ ! -d "${firmware_dir}/.git" ]]; then
         mkdir -p "${SRCDIR}/mkosi.cache"
-        git clone --depth 1 https://gitlab.com/sdm845-mainline/firmware-oneplus-sdm845 "${firmware_dir}"
+        git clone --depth 1 "${FIRMWARE_REPO_URL}" "${firmware_dir}"
+    fi
+
+    current_commit="$(git -C "${firmware_dir}" rev-parse HEAD 2>/dev/null || true)"
+    if [[ "${current_commit}" != "${FIRMWARE_COMMIT}" ]]; then
+        git -C "${firmware_dir}" fetch --depth 1 origin "${FIRMWARE_COMMIT}"
+        git -C "${firmware_dir}" checkout --detach --force "${FIRMWARE_COMMIT}"
     fi
 fi

@@ -46,7 +46,7 @@ From repo root:
 ```bash
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y erofs-utils systemd-ukify casync awscli
-sudo mkosi -f --profile erofs-lz4,phosh,embedded-firmware,precompile-akmods
+sudo mkosi -f --profile erofs-lz4,phosh,sdm845-embedded-firmware,precompile-akmods
 COMPOSE_ENABLE_PUBLISH=0 COMPOSE_USE_SUDO=1 ./scripts/casync-compose.sh
 ```
 
