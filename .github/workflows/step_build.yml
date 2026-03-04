@@ -113,10 +113,10 @@ jobs:
             echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           fi
 
-      - name: Download fastboop-cli v0.0.1-rc.2
+      - name: Download fastboop-cli v0.0.1-rc.5
         id: fastboop_cli
         run: |
-          FASTBOOP_CLI_VERSION="v0.0.1-rc.2"
+          FASTBOOP_CLI_VERSION="v0.0.1-rc.5"
 
           case "${RUNNER_ARCH}" in
             ARM64)
