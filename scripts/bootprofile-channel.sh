@@ -137,7 +137,7 @@ else:
 manifest = {
     "id": profile_id,
     "display_name": display_name,
-    "extra_cmdline": "selinux=0",
+    "extra_cmdline": "selinux=0 init_on_alloc=0",
     "rootfs": {
         "ostree": {
             "erofs": source,
