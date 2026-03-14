@@ -1,0 +1,43 @@
+From 05a3c32755b8cbc29e0c27e7aa20d7cacffef89a Mon Sep 17 00:00:00 2001
+From: Martin Kolman <mkolman@redhat.com>
+Date: Thu, 19 Feb 2026 19:52:56 +0100
+Subject: [PATCH] Add --enable-vt-switch when running gnome-kiosk
+
+As of version 50 GNOME Kiosk disables keyboard shortcuts for TTY
+switching. This functionality is important for both Anaconda developers
+and Anaconda users to switch to a TTY for debugging.
+
+TTY switching shortcuts are also heavily used by the OpenQA based
+integration testing pipeline maintained by Fedora GA.
+
+So add --enable-vt-switch to the gnome-kiosk invocation to make sure
+TTY switching keyboard shortcuts will still work in the installation
+environment going forward.
+
+Related: rhbz#2440563
+---
+ pyanaconda/display.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/pyanaconda/display.py b/pyanaconda/display.py
+index abb0c3325e..33b186c9c6 100644
+--- a/pyanaconda/display.py
++++ b/pyanaconda/display.py
+@@ -202,7 +202,13 @@ def do_startup_wl_actions(timeout, headless=False, headless_resolution=None):
+         argv.extend(["--vt", "6"])
+ 
+     # add the generic GNOME Kiosk invocation
+-    argv.extend(["gnome-kiosk", "--wayland", "--wayland-display", constants.WAYLAND_SOCKET_NAME])
++    argv.extend([
++        "gnome-kiosk",
++        "--wayland",
++        "--enable-vt-switch",
++        "--wayland-display",
++        constants.WAYLAND_SOCKET_NAME]
++    )
+ 
+     # remote access needs gnome-kiosk to start in headless mode
+     if headless:
+-- 
+2.53.0
+

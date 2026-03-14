@@ -1,0 +1,70 @@
+From 11b7e782d8de7da49f0b4e650e8fc0c60f69304f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Miro=20Hron=C4=8Dok?= <miro@hroncok.cz>
+Date: Sun, 8 Jun 2025 17:46:29 +0200
+Subject: [PATCH] Avoid the multiprocessing forkserver method with dnf
+
+Fixes:
+
+    Traceback (most recent call last):
+      File "/usr/lib64/python3.14/site-packages/pyanaconda/core/threads.py", line 281, in run
+        threading.Thread.run(self)
+        ~~~~~~~~~~~~~~~~~~~~^^^^^^
+      File "/usr/lib64/python3.14/threading.py", line 1023, in run
+        self._target(*self._args, **self._kwargs)
+        ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/usr/lib64/python3.14/site-packages/pyanaconda/modules/common/task/task.py", line 97, in _thread_run_callback
+        self._task_run_callback()
+        ~~~~~~~~~~~~~~~~~~~~~~~^^
+      File "/usr/lib64/python3.14/site-packages/pyanaconda/modules/common/task/task.py", line 110, in _task_run_callback
+        self._set_result(self.run())
+                         ~~~~~~~~^^
+      File "/usr/lib64/python3.14/site-packages/pyanaconda/modules/payloads/payload/dnf/installation.py", line 281, in run
+        self._dnf_manager.install_packages(self.report_progress)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+      File "/usr/lib64/python3.14/site-packages/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py", line 664, in install_packages
+        process.start()
+        ~~~~~~~~~~~~~^^
+      File "/usr/lib64/python3.14/multiprocessing/process.py", line 121, in start
+        self._popen = self._Popen(self)
+                      ~~~~~~~~~~~^^^^^^
+      File "/usr/lib64/python3.14/multiprocessing/context.py", line 224, in _Popen
+        return _default_context.get_context().Process._Popen(process_obj)
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+      File "/usr/lib64/python3.14/multiprocessing/context.py", line 300, in _Popen
+        return Popen(process_obj)
+      File "/usr/lib64/python3.14/multiprocessing/popen_forkserver.py", line 35, in __init__
+        super().__init__(process_obj)
+        ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+      File "/usr/lib64/python3.14/multiprocessing/popen_fork.py", line 20, in __init__
+        self._launch(process_obj)
+        ~~~~~~~~~~~~^^^^^^^^^^^^^
+      File "/usr/lib64/python3.14/multiprocessing/popen_forkserver.py", line 47, in _launch
+        reduction.dump(process_obj, buf)
+        ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+      File "/usr/lib64/python3.14/multiprocessing/reduction.py", line 60, in dump
+        ForkingPickler(file, protocol).dump(obj)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+    TypeError: cannot pickle 'SwigPyObject' object
+---
+ pyanaconda/modules/payloads/payload/dnf/dnf_manager.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py b/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py
+index 925ed73790a..e7c25369912 100644
+--- a/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py
++++ b/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py
+@@ -652,9 +652,12 @@ def install_packages(self, callback, timeout=20):
+         :param timeout: a time out of a failed process in seconds
+         :raise PayloadInstallationError: if the installation fails
+         """
+-        queue = multiprocessing.Queue()
++        # SwigPyObjects are not picklable, so force the fork method
++        # On Python 3.14+, forkserver is the default (and it pickles)
++        context = multiprocessing.get_context(method="fork")
++        queue = context.Queue()
+         display = TransactionProgress(queue)
+-        process = multiprocessing.Process(
++        process = context.Process(
+             target=self._run_transaction,
+             args=(self._base, display)
+         )

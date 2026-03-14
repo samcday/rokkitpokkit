@@ -1,0 +1,12 @@
+# Names of local repositories whose urls will be used for installation
+
+# Repositories for "Fedora X" needs to be dynamically resolved based on host
+if dnf repoinfo --enabled | grep -qe "Repo ID *: rawhide"; then
+  BASE_REPO="rawhide"
+else
+  BASE_REPO="fedora"
+fi
+
+# Additional repositories
+REPOS=""
+#REPOS="fedora-modular"
