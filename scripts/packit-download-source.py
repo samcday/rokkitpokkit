@@ -8,6 +8,12 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 
+KNOWN_GITHUB_REPOS = {
+    "anaconda": "rhinstaller/anaconda",
+    "anaconda-webui": "rhinstaller/anaconda-webui",
+}
+
+
 def run_capture(command: list[str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, check=False, capture_output=True, text=True)
 
@@ -58,20 +64,24 @@ def try_github_release_download(
     version: str | None,
     project_url: str | None,
 ) -> list[str]:
-    if not project_url:
-        return []
+    owner = None
+    repo = None
 
-    parsed_url = urlsplit(project_url)
-    if parsed_url.scheme not in {"http", "https"}:
-        return []
-    if parsed_url.hostname not in {"github.com", "www.github.com"}:
-        return []
+    if project_url:
+        parsed_url = urlsplit(project_url)
+        if parsed_url.scheme in {"http", "https"} and parsed_url.hostname in {
+            "github.com",
+            "www.github.com",
+        }:
+            path_parts = [part for part in parsed_url.path.split("/") if part]
+            if len(path_parts) >= 2:
+                owner, repo = path_parts[0], path_parts[1]
 
-    path_parts = [part for part in parsed_url.path.split("/") if part]
-    if len(path_parts) < 2:
-        return []
+    if (owner is None or repo is None) and package_name in KNOWN_GITHUB_REPOS:
+        owner, repo = KNOWN_GITHUB_REPOS[package_name].split("/", 1)
 
-    owner, repo = path_parts[0], path_parts[1]
+    if owner is None or repo is None:
+        return []
 
     candidate_tags: list[str] = []
     if package_name and version:
