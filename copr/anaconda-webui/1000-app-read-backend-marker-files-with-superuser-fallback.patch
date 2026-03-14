@@ -1,0 +1,36 @@
+From 14420151b1a12502902ae348f2c36822bb380415 Mon Sep 17 00:00:00 2001
+From: Sam Day <me@samcday.com>
+Date: Sat, 14 Mar 2026 12:29:43 +1000
+Subject: [PATCH] app: read backend marker files with superuser fallback
+
+Signed-off-by: Sam Day <me@samcday.com>
+Assisted-by: opencode:gpt-5.3-codex
+---
+ src/components/app.jsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/components/app.jsx b/src/components/app.jsx
+index 6f0040b2..dd1abae5 100644
+--- a/src/components/app.jsx
++++ b/src/components/app.jsx
+@@ -138,7 +138,7 @@ const useAddress = (onCritFail) => {
+             return;
+         }
+ 
+-        cockpit.file("/run/anaconda/bus.address").watch(address => {
++        cockpit.file("/run/anaconda/bus.address", { superuser: "try" }).watch(address => {
+             setAddress(address);
+         });
+     }, [backendReady]);
+@@ -146,7 +146,7 @@ const useAddress = (onCritFail) => {
+     const wasReadyRef = useRef(false);
+ 
+     useEffect(() => {
+-        cockpit.file("/run/anaconda/backend_ready").watch(
++        cockpit.file("/run/anaconda/backend_ready", { superuser: "try" }).watch(
+             (content) => {
+                 const isReady = content !== null;
+ 
+-- 
+2.53.0
+

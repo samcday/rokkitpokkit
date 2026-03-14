@@ -1,0 +1,49 @@
+upstream_project_url: https://github.com/rhinstaller/anaconda-webui
+# enable notification of failed downstream jobs as issues
+issue_repository: https://github.com/rhinstaller/anaconda-webui
+specfile_path: anaconda-webui.spec
+upstream_package_name: anaconda-webui
+downstream_package_name: anaconda-webui
+# use the nicely formatted release description from our upstream release, instead of git shortlog
+copy_upstream_release_description: true
+
+srpm_build_deps:
+- npm
+- make
+
+actions:
+  post-upstream-clone: make anaconda-webui.spec
+  create-archive: make dist
+
+jobs:
+  - job: tests
+    trigger: pull_request
+    targets:
+    - fedora-development
+
+  - job: copr_build
+    trigger: pull_request
+    targets:
+    - fedora-development
+
+  # for cross-project testing
+  - job: copr_build
+    trigger: commit
+    owner: "@rhinstaller"
+    project: "Anaconda-webui"
+    preserve_project: True
+
+  - job: propose_downstream
+    trigger: release
+    dist_git_branches:
+      - fedora-development
+
+  - job: koji_build
+    trigger: commit
+    dist_git_branches:
+      - fedora-development
+
+  - job: bodhi_update
+    trigger: koji_build
+    dist_git_branches:
+      - fedora-development
