@@ -8,6 +8,7 @@ packages:
     upstream_package_name: anaconda
     downstream_package_name: anaconda
     srpm_build_deps:
+      - curl
       - rpm-build
       - rpmdevtools
     actions:
@@ -21,6 +22,7 @@ packages:
     upstream_package_name: anaconda-webui
     downstream_package_name: anaconda-webui
     srpm_build_deps:
+      - curl
       - rpm-build
       - rpmdevtools
     actions:
