@@ -1,0 +1,71 @@
+osh_diff_scan_after_copr_build: false
+
+packages:
+  anaconda:
+    paths:
+      - copr/anaconda
+    specfile_path: anaconda.spec
+    upstream_package_name: anaconda
+    downstream_package_name: anaconda
+    srpm_build_deps:
+      - rpm-build
+      - rpmdevtools
+    actions:
+      create-archive:
+        - ../../scripts/packit-download-source.py anaconda.spec
+
+  anaconda-webui:
+    paths:
+      - copr/anaconda-webui
+    specfile_path: anaconda-webui.spec
+    upstream_package_name: anaconda-webui
+    downstream_package_name: anaconda-webui
+    srpm_build_deps:
+      - rpm-build
+      - rpmdevtools
+    actions:
+      create-archive:
+        - ../../scripts/packit-download-source.py anaconda-webui.spec
+
+_:
+  copr_build_base: &copr_build_base
+    job: copr_build
+    owner: samcday
+    project: rokkitpokkit
+    preserve_project: true
+    targets:
+      - fedora-rawhide-aarch64
+      - fedora-rawhide-x86_64
+      - fedora-44-aarch64
+      - fedora-44-x86_64
+      - fedora-43-aarch64
+      - fedora-43-x86_64
+      - fedora-42-aarch64
+      - fedora-42-x86_64
+
+jobs:
+  - <<: *copr_build_base
+    trigger: pull_request
+    packages:
+      - anaconda
+    identifier: anaconda-pr
+
+  - <<: *copr_build_base
+    trigger: commit
+    branch: main
+    packages:
+      - anaconda
+    identifier: anaconda-main
+
+  - <<: *copr_build_base
+    trigger: pull_request
+    packages:
+      - anaconda-webui
+    identifier: anaconda-webui-pr
+
+  - <<: *copr_build_base
+    trigger: commit
+    branch: main
+    packages:
+      - anaconda-webui
+    identifier: anaconda-webui-main
