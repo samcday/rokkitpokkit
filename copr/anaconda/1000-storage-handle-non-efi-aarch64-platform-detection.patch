@@ -1,0 +1,29 @@
+From a7a329d2f9147c45819ed7447d27e8aff098fa93 Mon Sep 17 00:00:00 2001
+From: Sam Day <me@samcday.com>
+Date: Mon, 9 Mar 2026 18:32:14 +1000
+Subject: [PATCH] storage: handle non-EFI aarch64 platform detection
+
+Map non-EFI aarch64 systems to the ARM storage platform so installer startup does not fail with 'Could not determine system architecture.' on devices like OnePlus fajita.
+
+Signed-off-by: Sam Day <me@samcday.com>
+Assisted-by: opencode:gpt-5.3-codex
+---
+ pyanaconda/modules/storage/platform.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/pyanaconda/modules/storage/platform.py b/pyanaconda/modules/storage/platform.py
+index c087fa1716..2e19ddeb2a 100644
+--- a/pyanaconda/modules/storage/platform.py
++++ b/pyanaconda/modules/storage/platform.py
+@@ -491,6 +491,8 @@ def get_platform():
+             return EFI()
+     elif arch.is_x86():
+         return X86()
++    elif arch.is_aarch64():
++        return ARM()
+     elif arch.is_arm():
+         return ARM()
+     elif arch.is_riscv64():
+-- 
+2.53.0
+

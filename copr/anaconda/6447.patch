@@ -1,0 +1,42 @@
+From d75de3da3648dee474ddea6639e09c071f027232 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Miro=20Hron=C4=8Dok?= <miro@hroncok.cz>
+Date: Sat, 7 Jun 2025 13:44:25 +0200
+Subject: [PATCH] Avoid buffer overflow with TIOCGWINSZ
+
+It has 4 bytes, not 2.
+
+On Python 3.14+, the previous version raised SystemError:
+
+    >>> from pyanaconda.argument_parsing import get_help_width
+    ...
+    >>> get_help_width()
+    Traceback (most recent call last):
+      File "<python-input-1>", line 1, in <module>
+        get_help_width()
+        ~~~~~~~~~~~~~~^^
+      File "/usr/lib64/python3.14/site-packages/pyanaconda/argument_parsing.py", line 68, in get_help_width
+        data = fcntl.ioctl(sys.stdout, termios.TIOCGWINSZ, '1234')
+    SystemError: buffer overflow
+
+See https://github.com/python/cpython/commit/c2eaeee3dc3306ca486b0377b07b1a957584b691
+
+Fixes https://bugzilla.redhat.com/2370944
+---
+ pyanaconda/argument_parsing.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pyanaconda/argument_parsing.py b/pyanaconda/argument_parsing.py
+index e24f0f1b999..55cf7993625 100644
+--- a/pyanaconda/argument_parsing.py
++++ b/pyanaconda/argument_parsing.py
+@@ -65,8 +65,8 @@ def get_help_width():
+         return DEFAULT_HELP_WIDTH
+ 
+     try:
+-        data = fcntl.ioctl(sys.stdout, termios.TIOCGWINSZ, '1234')
+-        columns = int(struct.unpack('hh', data)[1])
++        data = fcntl.ioctl(sys.stdout, termios.TIOCGWINSZ, '12345678')
++        columns = int(struct.unpack('hhhh', data)[1])
+     except (OSError, ValueError) as e:
+         log.info("Unable to determine terminal width: %s", e)
+         print("terminal size detection failed, using default width")

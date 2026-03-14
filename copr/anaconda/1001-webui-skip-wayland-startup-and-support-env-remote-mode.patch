@@ -1,0 +1,62 @@
+From 0df03ddd57a721369077aedb8e571f6237ba5f88 Mon Sep 17 00:00:00 2001
+From: Sam Day <me@samcday.com>
+Date: Sat, 14 Mar 2026 12:22:10 +1000
+Subject: [PATCH] webui: skip Wayland startup and support env remote mode
+
+Signed-off-by: Sam Day <me@samcday.com>
+Assisted-by: opencode:gpt-5.3-codex
+---
+ pyanaconda/anaconda.py | 7 ++++++-
+ pyanaconda/display.py  | 8 ++++++--
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/pyanaconda/anaconda.py b/pyanaconda/anaconda.py
+index ca15e9a6c4..5ae9b06202 100644
+--- a/pyanaconda/anaconda.py
++++ b/pyanaconda/anaconda.py
+@@ -214,10 +214,15 @@ class Anaconda:
+ 
+         if self.gui_mode and self.is_webui_supported:
+             from pyanaconda.ui.webui import CockpitUserInterface
++
++            webui_remote = (
++                "webui.remote" in kernel_arguments
++                or os.environ.get("ANACONDA_WEBUI_REMOTE") == "1"
++            )
+             self._intf = CockpitUserInterface(
+                 None,
+                 self.payload,
+-                "webui.remote" in kernel_arguments
++                webui_remote
+             )
+ 
+             # needs to be refreshed now we know if gui or tui will take place
+diff --git a/pyanaconda/display.py b/pyanaconda/display.py
+index 3af8148ed2..ac4e70c95a 100644
+--- a/pyanaconda/display.py
++++ b/pyanaconda/display.py
+@@ -371,7 +371,11 @@ def setup_display(anaconda, options):
+     startup_utils.check_memory(anaconda, options)
+ 
+     # check_memory may have changed the display mode
+-    want_gui = anaconda.gui_mode and not (flags.preexisting_wayland or flags.use_rd)
++    want_gui = (
++        anaconda.gui_mode
++        and not anaconda.is_webui_supported
++        and not (flags.preexisting_wayland or flags.use_rd)
++    )
+     if want_gui:
+         try:
+             do_startup_wl_actions(xtimeout)
+@@ -424,7 +428,7 @@ def setup_display(anaconda, options):
+         grd_server.rdp_password = rdp_creds.password
+         grd_server.start_grd_rdp()
+ 
+-    # with Wayland running we can initialize the UI interface
++    # initialize the selected UI interface
+     anaconda.initialize_interface()
+ 
+     if anaconda.gui_startup_failed:
+-- 
+2.53.0
+

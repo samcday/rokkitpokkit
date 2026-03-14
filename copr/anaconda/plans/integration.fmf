@@ -1,0 +1,12 @@
+summary: Integration tests for anaconda
+
+discover:
+    how: fmf
+    filter: 'tag: integration'
+
+execute:
+    how: tmt
+
+finish:
+    how: shell
+    script: command -v journalctl && journalctl -a || true

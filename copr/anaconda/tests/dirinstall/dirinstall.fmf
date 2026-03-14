@@ -1,0 +1,22 @@
+summary: Dirinstall test on regular os
+contact: Radek Vykydal <rvykydal@redhat.com>
+path: /tests/dirinstall
+test: ./dirinstall.sh
+duration: 1h
+tag: [integration]
+
+/text:
+    summary: Dirinstall test on regular os - text UI
+    require:
+        - anaconda
+    environment:
+        ANACONDA_UI_MODE: text
+
+/vnc:
+    summary: Dirinstall test on regular os - vnc UI
+    enabled: false
+    require:
+        - anaconda
+        - gnome-kiosk
+    environment:
+        ANACONDA_UI_MODE: vnc
