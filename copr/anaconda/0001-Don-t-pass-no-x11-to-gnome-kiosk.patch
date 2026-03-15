@@ -1,0 +1,31 @@
+From b4b09f54b39b288f326b4734c13d27aa710e69d3 Mon Sep 17 00:00:00 2001
+From: Adam Williamson <awilliam@redhat.com>
+Date: Mon, 2 Jun 2025 12:28:49 -0700
+Subject: [PATCH] Don't pass --no-x11 to gnome-kiosk
+
+This is also gone when mutter is built without X11 support, as
+is now the case in Rawhide and ELN, and probably soon in EL 10.
+Don't backport this to earlier branches.
+
+Signed-off-by: Adam Williamson <awilliam@redhat.com>
+---
+ pyanaconda/display.py | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/pyanaconda/display.py b/pyanaconda/display.py
+index 25a0e15142..20adcf58ff 100644
+--- a/pyanaconda/display.py
++++ b/pyanaconda/display.py
+@@ -226,8 +226,7 @@ def do_startup_wl_actions(timeout, headless=False, headless_resolution=None):
+         argv.extend(["--vt", "6"])
+ 
+     # add the generic GNOME Kiosk invocation
+-    argv.extend(["gnome-kiosk", "--wayland", "--no-x11",
+-                 "--wayland-display", constants.WAYLAND_SOCKET_NAME])
++    argv.extend(["gnome-kiosk", "--wayland", "--wayland-display", constants.WAYLAND_SOCKET_NAME])
+ 
+     # remote access needs gnome-kiosk to start in headless mode
+     if headless:
+-- 
+2.49.0
+

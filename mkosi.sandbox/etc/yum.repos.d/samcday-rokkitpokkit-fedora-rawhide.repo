@@ -1,0 +1,10 @@
+[copr:copr.fedorainfracloud.org:samcday:rokkitpokkit]
+name=Copr repo for rokkitpokkit owned by samcday
+baseurl=https://download.copr.fedorainfracloud.org/results/samcday/rokkitpokkit/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/samcday/rokkitpokkit/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1

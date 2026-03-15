@@ -1,0 +1,32 @@
+From 39620475d01c73b33e3b4c4a05f44157e251fbbe Mon Sep 17 00:00:00 2001
+From: Adam Williamson <awilliam@redhat.com>
+Date: Mon, 9 Sep 2024 08:32:47 -0700
+Subject: [PATCH] storage: use `console.warn` not `console.warning` to fix
+ crash
+
+f66f8f4 mistakenly tried to log a warning with `console.warning`,
+which doesn't exist. It's `console.warn`. This means we still
+crash on the path where we crashed before, now with an error
+about `console.warning` being undefined.
+
+Signed-off-by: Adam Williamson <awilliam@redhat.com>
+---
+ src/actions/storage-actions.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/actions/storage-actions.js b/src/actions/storage-actions.js
+index 9e367b0..d81d02c 100644
+--- a/src/actions/storage-actions.js
++++ b/src/actions/storage-actions.js
+@@ -79,7 +79,7 @@ export const getDevicesAction = () => {
+                             partName: partName.trim(),
+                         };
+                     } catch (e) {
+-                        console.warning("Failed to get partition label", e);
++                        console.warn("Failed to get partition label", e);
+                         devData.misc = {
+                             fsLabel: "",
+                             partName: "",
+-- 
+2.46.0
+

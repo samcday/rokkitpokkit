@@ -1,0 +1,26 @@
+From 52b1d40b946b2ff0b4f00b8881ff2f2fbc3074f6 Mon Sep 17 00:00:00 2001
+From: Sam Day <me@samcday.com>
+Date: Sat, 14 Mar 2026 12:29:29 +1000
+Subject: [PATCH] webui: make backend readiness flag world-readable
+
+Signed-off-by: Sam Day <me@samcday.com>
+Assisted-by: opencode:gpt-5.3-codex
+---
+ pyanaconda/ui/webui/__init__.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/pyanaconda/ui/webui/__init__.py b/pyanaconda/ui/webui/__init__.py
+index c2ae23961d..7f220414a4 100644
+--- a/pyanaconda/ui/webui/__init__.py
++++ b/pyanaconda/ui/webui/__init__.py
+@@ -128,6 +128,7 @@ class CockpitUserInterface(ui.UserInterface):
+         """Create a flag file for Web UI to signalize that backend is ready to be used."""
+         # just create the file - no content is required
+         touch(self._backend_ready_flag_file)
++        os.chmod(self._backend_ready_flag_file, 0o644)
+ 
+         try:
+             yield
+-- 
+2.53.0
+
