@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index b31774b8..4f4b2506 100644
+--- a/Makefile
++++ b/Makefile
+@@ -115,7 +115,7 @@ docs:
+ 	node docs/generate-docs.js
+ 	@echo "Installation documentation generated in docs/"
+ 
+-install: $(DIST_TEST) po/LINGUAS
++install: po/LINGUAS
+ 	mkdir -p $(DESTDIR)/usr/share/cockpit/$(PACKAGE_NAME)
+ 	cp -r dist/* $(DESTDIR)/usr/share/cockpit/$(PACKAGE_NAME)
+ 	mkdir -p $(DESTDIR)/usr/share/anaconda
