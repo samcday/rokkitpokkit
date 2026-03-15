@@ -5,7 +5,7 @@ Summary:        Anaconda installer Web interface
 License:        LGPL-2.1-or-later AND MIT
 URL:            https://github.com/rhinstaller/%{name}
 
-Source0:        anaconda-webui-67.tar.xz
+Source0:        https://github.com/rhinstaller/%{name}/releases/download/%{version}/%{name}-%{version}.tar.xz
 Patch1000:      1000-app-read-backend-marker-files-with-superuser-fallback.patch
 Patch1001:      1001-make-install-skip-dist-rebuild.patch
 BuildArch:      noarch

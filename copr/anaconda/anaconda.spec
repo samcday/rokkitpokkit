@@ -11,7 +11,7 @@ URL:     http://fedoraproject.org/wiki/Anaconda
 # git checkout -b archive-branch anaconda-%%{version}-%%{release}
 # ./autogen.sh
 # make dist
-Source0: anaconda-44.25.tar.bz2
+Source0: https://github.com/rhinstaller/%{name}/releases/download/anaconda-%{version}/%{name}-%{version}.tar.bz2
 
 Patch1000: 1000-storage-handle-non-efi-aarch64-platform-detection.patch
 Patch1001: 1001-webui-skip-wayland-startup-and-support-env-remote-mode.patch
