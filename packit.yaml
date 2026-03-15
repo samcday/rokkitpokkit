@@ -8,12 +8,11 @@ packages:
     upstream_package_name: anaconda
     downstream_package_name: anaconda
     srpm_build_deps:
-      - curl
       - rpm-build
       - rpmdevtools
     actions:
       create-archive:
-        - ../../scripts/packit-download-source.py anaconda.spec
+        - ../../scripts/packit-fetch-source.sh anaconda.spec
 
   anaconda-webui:
     paths:
@@ -22,12 +21,11 @@ packages:
     upstream_package_name: anaconda-webui
     downstream_package_name: anaconda-webui
     srpm_build_deps:
-      - curl
       - rpm-build
       - rpmdevtools
     actions:
       create-archive:
-        - ../../scripts/packit-download-source.py anaconda-webui.spec
+        - ../../scripts/packit-fetch-source.sh anaconda-webui.spec
 
 _:
   copr_build_base: &copr_build_base
