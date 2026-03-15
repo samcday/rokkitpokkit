@@ -32,9 +32,6 @@ packages:
 _:
   copr_build_base: &copr_build_base
     job: copr_build
-    owner: samcday
-    project: rokkitpokkit
-    preserve_project: true
     targets:
       - fedora-rawhide-aarch64
       - fedora-rawhide-x86_64
@@ -55,6 +52,9 @@ jobs:
   - <<: *copr_build_base
     trigger: commit
     branch: main
+    owner: samcday
+    project: rokkitpokkit
+    preserve_project: true
     packages:
       - anaconda
     identifier: anaconda-main
@@ -68,6 +68,9 @@ jobs:
   - <<: *copr_build_base
     trigger: commit
     branch: main
+    owner: samcday
+    project: rokkitpokkit
+    preserve_project: true
     packages:
       - anaconda-webui
     identifier: anaconda-webui-main
