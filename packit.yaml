@@ -27,9 +27,24 @@ packages:
       create-archive:
         - ../../scripts/packit-fetch-source.sh anaconda-webui.spec
 
+  droid-juicer:
+    paths:
+      - copr/droid-juicer
+    specfile_path: droid-juicer.spec
+    upstream_package_name: droid-juicer
+    downstream_package_name: droid-juicer
+    srpm_build_deps:
+      - rpm-build
+      - rpmdevtools
+    actions:
+      create-archive:
+        - ../../scripts/packit-fetch-source.sh droid-juicer.spec
+
 _:
   copr_build_base: &copr_build_base
     job: copr_build
+    additional_repos:
+      - copr://samcday/rokkitpokkit
     targets:
       - fedora-rawhide-aarch64
       - fedora-rawhide-x86_64
@@ -72,3 +87,19 @@ jobs:
     packages:
       - anaconda-webui
     identifier: anaconda-webui-main
+
+  - <<: *copr_build_base
+    trigger: pull_request
+    packages:
+      - droid-juicer
+    identifier: droid-juicer-pr
+
+  - <<: *copr_build_base
+    trigger: commit
+    branch: main
+    owner: samcday
+    project: rokkitpokkit
+    preserve_project: true
+    packages:
+      - droid-juicer
+    identifier: droid-juicer-main
