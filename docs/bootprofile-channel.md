@@ -26,6 +26,7 @@ The boot profile script:
    - `rokkitpokkit.bootpro.json`
    - `rokkitpokkit.bootpro`
    - `rokkitpokkit.bootpro.sha256`
+   - includes extra cmdline: `selinux=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60`
 3. Publishes the immutable boot profile object when publish is enabled.
 4. Updates `channels/stable.bootpro` on pushes to `main`.
 
