@@ -1,7 +1,7 @@
 %bcond check 1
 
 %global crate droid-juicer
-%global commit fcdd658a66428f296bcf0e12e94b5d1ac5bcb511
+%global commit da250b747613a7f20650741cfc0fe76769aa6152
 
 Name:           %{crate}
 Version:        0.4.2
