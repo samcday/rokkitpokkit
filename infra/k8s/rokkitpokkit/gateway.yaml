@@ -3,6 +3,13 @@ kind: Gateway
 metadata:
   name: public
 spec:
+  addresses:
+    - type: IPAddress
+      value: 167.235.132.134
+    - type: IPAddress
+      value: 91.98.169.183
+    - type: IPAddress
+      value: 178.104.65.17
   gatewayClassName: cilium
   listeners:
     - name: http
