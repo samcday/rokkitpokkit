@@ -1,0 +1,14 @@
+[Unit]
+Description=Persist NetworkManager system connections
+DefaultDependencies=no
+Before=local-fs.target
+ConditionPathExists=/dev/disk/by-partlabel/persist
+ConditionPathIsMountPoint=/var/lib/persist
+Requires=persist-prepare-dirs.service
+After=persist-prepare-dirs.service
+
+[Mount]
+What=/var/lib/persist/NetworkManager/system-connections
+Where=/etc/NetworkManager/system-connections
+Type=none
+Options=bind

@@ -1,0 +1,11 @@
+[Unit]
+Description=Persistent storage mount
+DefaultDependencies=no
+Before=local-fs.target
+ConditionPathExists=/dev/disk/by-partlabel/persist
+
+[Mount]
+What=/dev/disk/by-partlabel/persist
+Where=/var/lib/persist
+Type=ext4
+Options=defaults,noatime

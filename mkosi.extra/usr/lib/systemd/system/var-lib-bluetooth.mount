@@ -1,0 +1,14 @@
+[Unit]
+Description=Persist bluetooth state
+DefaultDependencies=no
+Before=local-fs.target
+ConditionPathExists=/dev/disk/by-partlabel/persist
+ConditionPathIsMountPoint=/var/lib/persist
+Requires=persist-prepare-dirs.service
+After=persist-prepare-dirs.service
+
+[Mount]
+What=/var/lib/persist/bluetooth
+Where=/var/lib/bluetooth
+Type=none
+Options=bind

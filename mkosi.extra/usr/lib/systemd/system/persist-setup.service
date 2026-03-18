@@ -1,0 +1,10 @@
+[Unit]
+Description=Set up optional persist-backed state mounts
+Wants=systemd-udev-settle.service var-lib-persist.mount persist-prepare-dirs.service etc-NetworkManager-system\x2dconnections.mount var-lib-bluetooth.mount
+After=systemd-udev-settle.service var-lib-persist.mount persist-prepare-dirs.service etc-NetworkManager-system\x2dconnections.mount var-lib-bluetooth.mount
+ConditionPathExists=/dev/disk/by-partlabel/persist
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/true
+RemainAfterExit=yes

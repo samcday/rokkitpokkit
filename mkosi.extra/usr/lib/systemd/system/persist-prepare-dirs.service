@@ -1,0 +1,16 @@
+[Unit]
+Description=Create directories for persist bind mounts
+DefaultDependencies=no
+Before=local-fs.target
+ConditionPathExists=/dev/disk/by-partlabel/persist
+ConditionPathIsMountPoint=/var/lib/persist
+Requires=var-lib-persist.mount
+After=var-lib-persist.mount
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/install -d -m 0755 /var/lib/persist/NetworkManager
+ExecStart=/usr/bin/install -d -m 0700 /var/lib/persist/NetworkManager/system-connections
+ExecStart=/usr/bin/install -d -m 0700 /var/lib/persist/bluetooth
+ExecStart=/usr/bin/install -d -m 0700 /etc/NetworkManager/system-connections
+ExecStart=/usr/bin/install -d -m 0700 /var/lib/bluetooth
