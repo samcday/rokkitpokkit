@@ -10,7 +10,6 @@ spec:
     - xn--nu8h3y.samcday.com
   parentRefs:
     - name: public
-      namespace: ingress-nginx
   rules:
     - matches:
         - path:
