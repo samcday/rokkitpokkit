@@ -9,7 +9,14 @@ data:
       auto_https off
     }
 
-    :8080 {
+    :80 {
+      respond /healthz "ok" 200
+      redir https://{host}{uri} 308
+    }
+
+    :443 {
+      tls /certs/tls.crt /certs/tls.key
+
       respond /healthz "ok" 200
       respond "🚀📱" 200
     }

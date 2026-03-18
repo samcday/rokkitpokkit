@@ -4,6 +4,7 @@ metadata:
   name: rokkitpokkit
   annotations:
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+    external-dns.alpha.kubernetes.io/target: "167.235.132.134,91.98.169.183,178.104.65.17"
 spec:
   hostnames:
     - rokkitpokkit.samcday.com
