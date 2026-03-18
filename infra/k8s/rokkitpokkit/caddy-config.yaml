@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rokkitpokkit-caddy
+data:
+  Caddyfile: |-
+    {
+      admin off
+      auto_https off
+    }
+
+    :8080 {
+      respond /healthz "ok" 200
+      respond "🚀📱" 200
+    }
