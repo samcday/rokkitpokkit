@@ -2,8 +2,6 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: public
-  annotations:
-    external-dns.alpha.kubernetes.io/target: "167.235.132.134,91.98.169.183,178.104.65.17"
 spec:
   gatewayClassName: cilium
   listeners:
