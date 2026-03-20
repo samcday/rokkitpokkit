@@ -37,7 +37,9 @@ data:
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
           Vary Origin
         }
-        reverse_proxy https://bleeding.fastboop.win
+        reverse_proxy https://bleeding.fastboop.win {
+          header_up Host bleeding.fastboop.win
+        }
       }
 
       respond "🚀📱" 200
