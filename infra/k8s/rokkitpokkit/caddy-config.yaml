@@ -11,5 +11,34 @@ data:
 
     :80 {
       respond /healthz "ok" 200
+
+      @stable_preflight {
+        method OPTIONS
+        path /stable
+      }
+      handle @stable_preflight {
+        header {
+          Access-Control-Allow-Origin *
+          Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+          Access-Control-Allow-Headers "Range, Content-Type, Accept"
+          Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
+          Vary Origin
+        }
+        respond "" 204
+      }
+
+      @stable path /stable
+      handle @stable {
+        rewrite * /rokkitpokkit/channels/stable.bootpro
+        header {
+          Access-Control-Allow-Origin *
+          Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+          Access-Control-Allow-Headers "Range, Content-Type, Accept"
+          Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
+          Vary Origin
+        }
+        reverse_proxy https://bleeding.fastboop.win
+      }
+
       respond "🚀📱" 200
     }
