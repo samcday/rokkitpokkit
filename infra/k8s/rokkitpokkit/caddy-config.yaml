@@ -29,7 +29,6 @@ data:
 
       @stable path /stable
       handle @stable {
-        rewrite * /rokkitpokkit/channels/stable.bootpro
         header {
           Access-Control-Allow-Origin *
           Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
@@ -37,9 +36,7 @@ data:
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
           Vary Origin
         }
-        reverse_proxy https://bleeding.fastboop.win {
-          header_up Host bleeding.fastboop.win
-        }
+        redir https://bleeding.fastboop.win/rokkitpokkit/channels/stable.bootpro 302
       }
 
       respond "🚀📱" 200
