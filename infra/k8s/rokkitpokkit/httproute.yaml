@@ -9,7 +9,8 @@ spec:
     - rokkitpokkit.samcday.com
     - xn--nu8h3y.samcday.com
   parentRefs:
-    - name: public
+    - name: shared
+      namespace: kube-system
   rules:
     - matches:
         - path:

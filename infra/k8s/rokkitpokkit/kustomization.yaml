@@ -4,7 +4,6 @@ namespace: rokkitpokkit
 resources:
   - certificate.yaml
   - caddy-config.yaml
-  - gateway.yaml
   - deployment.yaml
   - httproute.yaml
   - service.yaml
