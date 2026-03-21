@@ -23,6 +23,17 @@ spec:
             - /etc/caddy/Caddyfile
             - --adapter
             - caddyfile
+          env:
+            - name: B2_PUBLIC_ORIGIN_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: rokkitpokkit-caddy
+                  key: B2_PUBLIC_ORIGIN_HOST
+            - name: B2_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: rokkitpokkit-caddy
+                  key: B2_BUCKET
           ports:
             - name: http
               containerPort: 80

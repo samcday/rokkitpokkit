@@ -83,22 +83,22 @@ jobs:
           name: rokkitpokkit
           path: mkosi.output/
 
-      - name: Upload rokkitpokkit.ero to R2
+      - name: Upload rokkitpokkit.ero to B2
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.B2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: auto
-          R2_BUCKET: ${{ secrets.R2_BUCKET }}
-          R2_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
+          B2_BUCKET: ${{ secrets.B2_BUCKET }}
+          B2_ENDPOINT_URL: ${{ secrets.B2_ENDPOINT_URL }}
         run: |
           stamp="$(date -u +%Y%m%d)"
           object_key="rokkitpokkit/${stamp}.ero"
           aws s3api put-object \
-            --bucket "${R2_BUCKET}" \
+            --bucket "${B2_BUCKET}" \
             --key "${object_key}" \
             --body "mkosi.output/rokkitpokkit.ero" \
             --content-type "application/octet-stream" \
-            --endpoint-url "${R2_ENDPOINT_URL}"
+            --endpoint-url "${B2_ENDPOINT_URL}"
 
   pass:
     name: ✅ Pass

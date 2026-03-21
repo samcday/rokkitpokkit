@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: rokkitpokkit-caddy
 data:
+  B2_PUBLIC_ORIGIN_HOST: f000.backblazeb2.com
+  B2_BUCKET: rokkitpokkit
   Caddyfile: |-
     {
       admin off
@@ -12,11 +14,11 @@ data:
     :80 {
       respond /healthz "ok" 200
 
-      @stable_preflight {
+      @casync_preflight {
         method OPTIONS
-        path /stable
+        path /casync/*
       }
-      handle @stable_preflight {
+      handle @casync_preflight {
         header {
           Access-Control-Allow-Origin *
           Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
@@ -27,8 +29,8 @@ data:
         respond "" 204
       }
 
-      @stable path /stable
-      handle @stable {
+      @casync path /casync/*
+      handle @casync {
         header {
           Access-Control-Allow-Origin *
           Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
@@ -36,7 +38,25 @@ data:
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
           Vary Origin
         }
-        redir https://bleeding.fastboop.win/rokkitpokkit/channels/stable.bootpro 302
+        rewrite * /file/{$B2_BUCKET}{uri}
+        reverse_proxy https://{$B2_PUBLIC_ORIGIN_HOST}
+      }
+
+      @channels path /channels/*
+      handle @channels {
+        rewrite * /file/{$B2_BUCKET}{uri}
+        reverse_proxy https://{$B2_PUBLIC_ORIGIN_HOST}
+      }
+
+      @images path /images/*
+      handle @images {
+        rewrite * /file/{$B2_BUCKET}{uri}
+        reverse_proxy https://{$B2_PUBLIC_ORIGIN_HOST}
+      }
+
+      @stable path /stable
+      handle @stable {
+        redir /channels/stable.bootpro 302
       }
 
       respond "🚀📱" 200

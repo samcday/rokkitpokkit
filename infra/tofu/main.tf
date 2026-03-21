@@ -1,69 +1,57 @@
-provider "cloudflare" {
+provider "b2" {
+  application_key_id = var.b2_application_key_id
+  application_key    = var.b2_application_key
 }
 
 provider "github" {
   owner = var.github_owner
 }
 
-data "cloudflare_api_token_permission_groups_list" "r2_bucket_item_write" {
-  name = "Workers R2 Storage Bucket Item Write"
+resource "b2_bucket" "rokkitpokkit" {
+  bucket_name = var.b2_bucket_name
+  bucket_type = "allPublic"
 }
 
-data "cloudflare_api_token_permission_groups_list" "r2_storage_write" {
-  name = "Workers R2 Storage Write"
+resource "b2_application_key" "rokkitpokkit_upload" {
+  key_name = "rokkitpokkit-upload"
+  capabilities = [
+    "listBuckets",
+    "listFiles",
+    "readFiles",
+    "writeFiles",
+    "deleteFiles",
+  ]
+  bucket_ids = [b2_bucket.rokkitpokkit.bucket_id]
 }
 
-locals {
-  r2_bucket_item_write_permission_group_id = coalesce(
-    try(one(data.cloudflare_api_token_permission_groups_list.r2_bucket_item_write.result).id, null),
-    try(one(data.cloudflare_api_token_permission_groups_list.r2_storage_write.result).id, null)
-  )
-  r2_bucket_resource = "com.cloudflare.edge.r2.bucket.${var.account_id}_default_${var.r2_bucket_name}"
-}
-
-resource "cloudflare_api_token" "rokkitpokkit_upload" {
-  name = "rokkitpokkit-r2-upload"
-
-  lifecycle {
-    precondition {
-      condition     = local.r2_bucket_item_write_permission_group_id != null
-      error_message = "Could not resolve an R2 write permission group from Cloudflare."
-    }
-  }
-
-  policies = [{
-    effect = "allow"
-    permission_groups = [{
-      id = local.r2_bucket_item_write_permission_group_id
-    }]
-    resources = jsonencode({
-      (local.r2_bucket_resource) = "*"
-    })
-  }]
-}
-
-resource "github_actions_secret" "r2_access_key_id" {
+resource "github_actions_secret" "b2_access_key_id" {
   repository      = var.github_repo
-  secret_name     = "R2_ACCESS_KEY_ID"
-  plaintext_value = cloudflare_api_token.rokkitpokkit_upload.id
+  secret_name     = "B2_ACCESS_KEY_ID"
+  plaintext_value = b2_application_key.rokkitpokkit_upload.application_key_id
 }
 
-resource "github_actions_secret" "r2_secret_access_key" {
+resource "github_actions_secret" "b2_secret_access_key" {
   repository      = var.github_repo
-  secret_name     = "R2_SECRET_ACCESS_KEY"
-  plaintext_value = sha256(cloudflare_api_token.rokkitpokkit_upload.value)
+  secret_name     = "B2_SECRET_ACCESS_KEY"
+  plaintext_value = b2_application_key.rokkitpokkit_upload.application_key
 }
 
-resource "github_actions_secret" "r2_bucket" {
+resource "github_actions_secret" "b2_bucket" {
   repository      = var.github_repo
-  secret_name     = "R2_BUCKET"
-  plaintext_value = var.r2_bucket_name
+  secret_name     = "B2_BUCKET"
+  plaintext_value = b2_bucket.rokkitpokkit.bucket_name
 }
 
-resource "github_actions_secret" "r2_endpoint_url" {
+resource "github_actions_secret" "b2_endpoint_url" {
   repository      = var.github_repo
-  secret_name     = "R2_ENDPOINT_URL"
-  plaintext_value = "https://${var.account_id}.r2.cloudflarestorage.com"
+  secret_name     = "B2_ENDPOINT_URL"
+  plaintext_value = var.b2_endpoint_url
+}
+
+resource "github_actions_secret" "b2_public_origin_url" {
+  repository      = var.github_repo
+  secret_name     = "B2_PUBLIC_ORIGIN_URL"
+  plaintext_value = var.b2_public_origin_url
 }
 
 resource "github_actions_secret" "tofu_state_passphrase" {

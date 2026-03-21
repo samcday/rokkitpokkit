@@ -177,14 +177,13 @@ jobs:
       - name: Build compose artifacts and validate casync integrity
         id: compose
         env:
-          COMPOSE_ENABLE_PUBLISH: ${{ (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && secrets.R2_BUCKET != '' && secrets.R2_ACCESS_KEY_ID != '' && secrets.R2_SECRET_ACCESS_KEY != '' && secrets.R2_ENDPOINT_URL != '' }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          COMPOSE_ENABLE_PUBLISH: ${{ (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && secrets.B2_BUCKET != '' && secrets.B2_ACCESS_KEY_ID != '' && secrets.B2_SECRET_ACCESS_KEY != '' && secrets.B2_ENDPOINT_URL != '' }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.B2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: auto
-          COMPOSE_BUCKET: ${{ secrets.R2_BUCKET }}
-          COMPOSE_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
-          COMPOSE_PUBLIC_BASE_URL: https://bleeding.fastboop.win
-          COMPOSE_OBJECT_PREFIX: rokkitpokkit
+          COMPOSE_BUCKET: ${{ secrets.B2_BUCKET }}
+          COMPOSE_ENDPOINT_URL: ${{ secrets.B2_ENDPOINT_URL }}
+          COMPOSE_PUBLIC_BASE_URL: https://rokkitpokkit.samcday.com
           COMPOSE_LOCAL_STORE_DIR: .casync-cache/store.castr
           COMPOSE_BASE_LINEAGE_REF: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
           COMPOSE_USE_SUDO: 1
@@ -224,13 +223,12 @@ jobs:
         env:
           BOOT_PROFILE_ENABLE_PUBLISH: ${{ steps.compose.outputs.compose_publish_enabled }}
           BOOT_PROFILE_CLI: ${{ steps.fastboop_cli.outputs.fastboop_cli_path }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.B2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: auto
-          BOOT_PROFILE_BUCKET: ${{ secrets.R2_BUCKET }}
-          BOOT_PROFILE_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
-          BOOT_PROFILE_PUBLIC_BASE_URL: https://bleeding.fastboop.win
-          BOOT_PROFILE_OBJECT_PREFIX: rokkitpokkit
+          BOOT_PROFILE_BUCKET: ${{ secrets.B2_BUCKET }}
+          BOOT_PROFILE_ENDPOINT_URL: ${{ secrets.B2_ENDPOINT_URL }}
+          BOOT_PROFILE_PUBLIC_BASE_URL: https://rokkitpokkit.samcday.com
           BOOT_PROFILE_SOURCE_FILE: ./mkosi.output/rokkitpokkit.ero
           BOOT_PROFILE_SOURCE_CASYNC_INDEX: ${{ steps.compose.outputs.compose_index_url }}
           BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE: ${{ steps.compose.outputs.compose_chunk_prefix_url }}

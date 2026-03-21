@@ -4,13 +4,13 @@ This repository publishes a deduplicated "Compose Thing" for branch and PR build
 
 ## Object layout
 
-All objects live under the existing `rokkitpokkit/` prefix in the bleeding bucket:
+Artifacts are published with paths that match the public origin layout directly:
 
-- `rokkitpokkit/casync/chunks/` - shared casync chunk store layout (`.castr` compatible)
-- `rokkitpokkit/casync/indexes/compose-<run>-<attempt>-<sha>.caibx` - immutable blob index per build
-- `rokkitpokkit/casync/manifests/<run>-<attempt>-<sha>.json` - immutable compose manifest per build
-- `rokkitpokkit/casync/refs/<ref>/latest.json` - mutable lineage pointer per ref
-- `rokkitpokkit/images/<run>-<attempt>-<sha>.ero` - canonical EROFS image per build
+- `casync/default.castr/` - shared casync chunk store layout (`.castr` compatible)
+- `casync/compose-<run>-<attempt>-<sha>.caibx` - immutable blob index per build
+- `casync/manifests/<run>-<attempt>-<sha>.json` - immutable compose manifest per build
+- `casync/refs/<ref>/latest.json` - mutable lineage pointer per ref
+- `images/<run>-<attempt>-<sha>.ero` - canonical EROFS image per build
 
 ## CI behavior
 
@@ -32,10 +32,10 @@ Boot profile channel publishing is handled separately by `scripts/bootprofile-ch
 
 Publish is attempted on PR/main/dispatch only when standard repository secrets are available:
 
-- `R2_ACCESS_KEY_ID`
-- `R2_SECRET_ACCESS_KEY`
-- `R2_BUCKET`
-- `R2_ENDPOINT_URL`
+- `B2_ACCESS_KEY_ID`
+- `B2_SECRET_ACCESS_KEY`
+- `B2_BUCKET`
+- `B2_ENDPOINT_URL`
 
 Fork PRs without secrets still run build + integrity checks, but skip object-store publication.
 
@@ -64,7 +64,7 @@ export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
 export COMPOSE_BUCKET=...
 export COMPOSE_ENDPOINT_URL=...
-export COMPOSE_PUBLIC_BASE_URL=https://bleeding.fastboop.win
+export COMPOSE_PUBLIC_BASE_URL=https://rokkitpokkit.samcday.com
 export COMPOSE_ENABLE_PUBLISH=1
 export COMPOSE_USE_SUDO=1
 ./scripts/casync-compose.sh

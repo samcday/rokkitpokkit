@@ -4,10 +4,10 @@ Boot profile channel publication is independent from casync compose publication.
 
 ## Object layout
 
-All boot profile channel objects live under the existing `rokkitpokkit/` prefix:
+Boot profile channel objects are published under `channels/`:
 
-- `rokkitpokkit/bootprofiles/<run>-<attempt>-<sha>.bootpro` - immutable boot profile binary per build
-- `rokkitpokkit/channels/stable.bootpro` - mutable stable boot profile pointer updated by pushes to `main`
+- `channels/builds/<run>-<attempt>-<sha>.bootpro` - immutable boot profile binary per build
+- `channels/stable.bootpro` - mutable stable boot profile pointer updated by pushes to `main`
 
 ## CI behavior
 
@@ -35,12 +35,12 @@ Boot profile compilation is delegated to `fastboop-cli`:
 - `BOOT_PROFILE_CLI` defaults to `fastboop-cli` from `PATH`.
 - CI sets `BOOT_PROFILE_CLI` to a pinned `v0.0.1-rc.2` release artifact.
 
-Publish uses the same R2 credentials as compose publication:
+Publish uses the same B2 credentials as compose publication:
 
-- `R2_ACCESS_KEY_ID`
-- `R2_SECRET_ACCESS_KEY`
-- `R2_BUCKET`
-- `R2_ENDPOINT_URL`
+- `B2_ACCESS_KEY_ID`
+- `B2_SECRET_ACCESS_KEY`
+- `B2_BUCKET`
+- `B2_ENDPOINT_URL`
 
 ## Local dry-run
 
@@ -83,10 +83,10 @@ export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
 export BOOT_PROFILE_BUCKET=...
 export BOOT_PROFILE_ENDPOINT_URL=...
-export BOOT_PROFILE_PUBLIC_BASE_URL=https://bleeding.fastboop.win
+export BOOT_PROFILE_PUBLIC_BASE_URL=https://rokkitpokkit.samcday.com
 export BOOT_PROFILE_ENABLE_PUBLISH=1
-export BOOT_PROFILE_SOURCE_CASYNC_INDEX=https://bleeding.fastboop.win/rokkitpokkit/casync/indexes/compose-<build>.caibx
-export BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE=https://bleeding.fastboop.win/rokkitpokkit/casync/chunks/
+export BOOT_PROFILE_SOURCE_CASYNC_INDEX=https://rokkitpokkit.samcday.com/casync/compose-<build>.caibx
+export BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE=https://rokkitpokkit.samcday.com/casync/default.castr/
 export BOOT_PROFILE_CLI=./.tools/fastboop-cli
 ./scripts/bootprofile-channel.sh
 ```

@@ -2,9 +2,9 @@ terraform {
   required_version = ">= 1.6.0"
 
   required_providers {
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 5.0"
+    b2 = {
+      source  = "Backblaze/b2"
+      version = "~> 0.10"
     }
     github = {
       source  = "integrations/github"
