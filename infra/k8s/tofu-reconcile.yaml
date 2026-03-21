@@ -1,0 +1,20 @@
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: rokkitpokkit-infra-tofu
+  namespace: flux-system
+spec:
+  interval: 10m
+  approvePlan: auto
+  path: ./infra/tofu
+  sourceRef:
+    kind: GitRepository
+    name: rokkitpokkit
+    namespace: flux-system
+  runnerPodTemplate:
+    spec:
+      envFrom:
+        - secretRef:
+            name: rokkitpokkit-tofu-auth
+  writeOutputsToSecret:
+    name: rokkitpokkit-tofu-outputs
