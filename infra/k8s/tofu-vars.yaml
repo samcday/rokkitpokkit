@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-    name: tofu-env
+    name: tofu-vars
     namespace: rokkitpokkit
 type: Opaque
 stringData: {}
@@ -16,7 +16,7 @@ sops:
             TCtRSmg1cHVFVkZkeG0xTkMvbU1PZncKfGlMgp6Vt/iy8KyaCTLYGs8MvdqmD3CS
             vNZdLtSs1gDgXVO+JetoIvCU5SNevigg1WiDa/Ndd/w8MvXOMXRgkA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-03-23T04:01:00Z"
-    mac: ENC[AES256_GCM,data:LA5pWmvQhn92FpCbYtmsRV+Sm3TUI+Z+XKhsmUqAb5TK7tLgsYYSRk4PxrjDsizwFa+OWGuan1E5zC636Cc68NgXZLsV4hNjNsqEnSZLx6F2N9MR1dWRa7uJp6aekwTeu/vRa69umGv7r4AOsjdrdgdk9OHhMVeRIBS5Fhd5Zqk=,iv:N6FzgiFtCKPqViHIZuiz9KTVwUOEqC+r18k7U8O1yoc=,tag:aJkiOw/LjMjJs6K2F+uOqA==,type:str]
+    lastmodified: "2026-03-23T04:04:34Z"
+    mac: ENC[AES256_GCM,data:bYY47VLJ9Qo1rUzq9My+h9ZYIzwuTGmN2HyKDg9Z9Fp/Sah9oAP8iDFuNTc6/Ak0n+fPA0+zRIS+uM9BZe95NZ1GNqtS0FZ5tvFKSJSCU98fN8DPZUMuk2hyNmX+7YFPeks1oepiAPStv+9NKcnrjhELD9wGp9Tl0c6Vl1GLkjQ=,iv:vJWUHnl+3Vw+heSDOft0LQHt/0btgUvH51fNsdmOIJY=,tag:9DRuN2lKiIJI1sfXzgib1w==,type:str]
     encrypted_regex: ^(data|stringData)$
     version: 3.11.0

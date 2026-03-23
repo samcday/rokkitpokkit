@@ -11,6 +11,8 @@ spec:
     kind: GitRepository
     name: rokkitpokkit
   varsFrom:
+    - name: tofu-bucket-vars
+      kind: Secret
     - name: tofu-vars
       kind: Secret
   runnerPodTemplate:
