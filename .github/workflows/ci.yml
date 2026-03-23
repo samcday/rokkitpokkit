@@ -72,34 +72,6 @@ jobs:
             echo "- gha artifact: \`${{ needs.build.outputs.build_artifact_url }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
-  upload-ero:
-    name: ☁️ upload .ero
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: rokkitpokkit
-          path: mkosi.output/
-
-      - name: Upload rokkitpokkit.ero to B2
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.B2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: auto
-          B2_BUCKET: ${{ secrets.B2_BUCKET }}
-          B2_ENDPOINT_URL: ${{ secrets.B2_ENDPOINT_URL }}
-        run: |
-          stamp="$(date -u +%Y%m%d)"
-          object_key="rokkitpokkit/${stamp}.ero"
-          aws s3api put-object \
-            --bucket "${B2_BUCKET}" \
-            --key "${object_key}" \
-            --body "mkosi.output/rokkitpokkit.ero" \
-            --content-type "application/octet-stream" \
-            --endpoint-url "${B2_ENDPOINT_URL}"
-
   pass:
     name: ✅ Pass
     needs: [ build, compose-coordinates ]
