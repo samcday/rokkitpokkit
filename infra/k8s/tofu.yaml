@@ -20,5 +20,3 @@ spec:
       envFrom:
         - secretRef:
             name: tofu-env
-  writeOutputsToSecret:
-    name: tofu-outputs

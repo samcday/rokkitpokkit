@@ -7,5 +7,6 @@ resources:
   - httproute.yaml
   - service.yaml
   - tofu-env.yaml
+  - tofu-rbac.yaml
   - tofu-vars.yaml
   - tofu.yaml

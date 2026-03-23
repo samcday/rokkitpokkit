@@ -4,8 +4,6 @@ metadata:
   name: rokkitpokkit-caddy
   namespace: rokkitpokkit
 data:
-  B2_PUBLIC_ORIGIN_HOST: f000.backblazeb2.com
-  B2_BUCKET: rokkitpokkit
   Caddyfile: |-
     {
       admin off

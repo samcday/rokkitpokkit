@@ -7,6 +7,8 @@ provider "github" {
   owner = var.github_owner
 }
 
+provider "kubernetes" {}
+
 data "b2_account_info" "b2" {
 
 }
@@ -43,4 +45,16 @@ resource "github_actions_secret" "b2_public_origin_url" {
   repository      = var.github_repo
   secret_name     = "B2_PUBLIC_ORIGIN_URL"
   plaintext_value = data.b2_account_info.b2.download_url
+}
+
+resource "kubernetes_secret" "pmos_storage" {
+  metadata {
+    name      = "caddy-env"
+    namespace = "rokkitpokkit"
+  }
+
+  data = {
+    B2_PUBLIC_ORIGIN_HOST = data.b2_account_info.b2.download_url
+    B2_BUCKET             = var.b2_bucket_name
+  }
 }
