@@ -15,16 +15,6 @@ variable "b2_bucket_name" {
   description = "Backblaze B2 bucket name for published artifacts."
 }
 
-variable "b2_endpoint_url" {
-  type        = string
-  description = "S3-compatible endpoint URL for the B2 bucket region."
-}
-
-variable "b2_public_origin_url" {
-  type        = string
-  description = "Public B2 download origin URL used by Caddy reverse proxy."
-}
-
 variable "github_owner" {
   type        = string
   description = "GitHub repository owner."
