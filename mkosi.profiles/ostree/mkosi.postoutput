@@ -34,18 +34,6 @@ fi
 ref="${OSTREE_REF:-rokkitpokkit/${release}/${architecture}}"
 stateroot="${OSTREE_STATEROOT:-rokkitpokkit}"
 
-compress=
-
-if [[ "${PROFILES:-}" == *"erofs-lzma"* ]]; then
-    compress=-zlzma
-fi
-if [[ "${PROFILES:-}" == *"erofs-zstd"* ]]; then
-    compress=-zzstd
-fi
-if [[ "${PROFILES:-}" == *"erofs-lz4"* ]]; then
-    compress=-zlz4
-fi
-
 if [[ ! -d "$image_dir" ]]; then
     echo "Missing image tree at $image_dir." >&2
     exit 1
@@ -131,15 +119,13 @@ cat > "$ostree_root/metadata.json" <<EOF
 }
 EOF
 
-if [[ -n "$compress" ]]; then
-    mkfs_opts=(-C 1048576 "$compress")
+mkfs_opts=(-C 1048576)
 
-    time mkfs.erofs "${mkfs_opts[@]}" "$OUTPUTDIR/ostree.ero" "$sysroot_dir/"
+time mkfs.erofs "${mkfs_opts[@]}" "$OUTPUTDIR/ostree.ero" "$sysroot_dir/"
 
-    chmod a+r "$OUTPUTDIR/ostree.ero"
+chmod a+r "$OUTPUTDIR/ostree.ero"
 
-    du -hs "$sysroot_dir"
-    du -hs "$OUTPUTDIR/ostree.ero"
-fi
+du -hs "$sysroot_dir"
+du -hs "$OUTPUTDIR/ostree.ero"
 
 chmod -R -f go+rX "$ostree_root"
