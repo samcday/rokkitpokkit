@@ -24,7 +24,7 @@ resource "b2_application_key" "rokkitpokkit_upload" {
     "writeFiles",
     "deleteFiles",
   ]
-  bucket_ids = [b2_bucket.rokkitpokkit.bucket_id]
+  bucket_ids = [data.b2_bucket.rokkitpokkit.bucket_id]
 }
 
 resource "github_actions_secret" "b2_access_key_id" {
@@ -42,7 +42,7 @@ resource "github_actions_secret" "b2_secret_access_key" {
 resource "github_actions_secret" "b2_bucket" {
   repository      = var.github_repo
   secret_name     = "B2_BUCKET"
-  plaintext_value = b2_bucket.rokkitpokkit.bucket_name
+  plaintext_value = data.b2_bucket.rokkitpokkit.bucket_name
 }
 
 resource "github_actions_secret" "b2_endpoint_url" {
