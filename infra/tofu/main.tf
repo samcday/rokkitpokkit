@@ -7,6 +7,10 @@ provider "github" {
   owner = var.github_owner
 }
 
+data "b2_account_info" "b2" {
+
+}
+
 data "b2_bucket" "rokkitpokkit" {
   bucket_name = var.b2_bucket_name
 }
@@ -44,11 +48,11 @@ resource "github_actions_secret" "b2_bucket" {
 resource "github_actions_secret" "b2_endpoint_url" {
   repository      = var.github_repo
   secret_name     = "B2_ENDPOINT_URL"
-  plaintext_value = var.b2_endpoint_url
+  plaintext_value = data.b2_account_info.b2.s3_api_url
 }
 
 resource "github_actions_secret" "b2_public_origin_url" {
   repository      = var.github_repo
   secret_name     = "B2_PUBLIC_ORIGIN_URL"
-  plaintext_value = var.b2_public_origin_url
+  plaintext_value = data.b2_account_info.b2.download_url
 }
