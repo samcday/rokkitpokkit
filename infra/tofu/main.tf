@@ -53,9 +53,3 @@ resource "github_actions_secret" "b2_public_origin_url" {
   secret_name     = "B2_PUBLIC_ORIGIN_URL"
   plaintext_value = var.b2_public_origin_url
 }
-
-resource "github_actions_secret" "tofu_state_passphrase" {
-  repository      = var.github_repo
-  secret_name     = "TF_VAR_state_passphrase"
-  plaintext_value = var.state_passphrase
-}
