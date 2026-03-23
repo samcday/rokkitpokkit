@@ -7,9 +7,8 @@ provider "github" {
   owner = var.github_owner
 }
 
-resource "b2_bucket" "rokkitpokkit" {
+data "b2_bucket" "rokkitpokkit" {
   bucket_name = var.b2_bucket_name
-  bucket_type = "allPublic"
 }
 
 resource "b2_application_key" "rokkitpokkit_upload" {
