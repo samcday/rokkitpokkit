@@ -18,7 +18,7 @@ spec:
   runnerPodTemplate:
     spec:
       envFrom:
-        - name: tofu-env
-          kind: Secret
+        - secretRef:
+            name: tofu-env
   writeOutputsToSecret:
     name: tofu-outputs
