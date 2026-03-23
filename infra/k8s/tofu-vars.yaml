@@ -1,22 +1,22 @@
-apiVersion: ENC[AES256_GCM,data:wks=,iv:jn22xW5TZUnZB9n3udn7ue9RI0vHKD+z4QfUL/vu8y4=,tag:1CwNoe+mA+UZ1j0SFqIEhQ==,type:str]
-kind: ENC[AES256_GCM,data:Zqx0t9Pf,iv:bwzVntsr+Rsv3nRyBn7/gP5Gz8EBl278tYTSyp2ykK8=,tag:lKHV7WuQBXjG6PZEG1+kMw==,type:str]
+apiVersion: v1
+kind: Secret
 metadata:
-    name: ENC[AES256_GCM,data:GdJ5WHQldek=,iv:vSfLuVlkTSTCRbzacI1BU3K3RxU1uU5iDRgi696Aiug=,tag:AUj09mAlxuad7niGz7yLMQ==,type:str]
-    namespace: ENC[AES256_GCM,data:NEzXgJvR4hUlzZ6m,iv:I5CIIFnrNahwLwO9uBSqWdiJg9WUDA4DFNaYZst0H50=,tag:EL/Ocs/p18eeNdtCnJpwyw==,type:str]
-type: ENC[AES256_GCM,data:IR6lgmmr,iv:3vDWJPhexJwKsnwKCxr36nOSYzmhP5VD6ktP18jsuG0=,tag:KEUtAoJwsjP3yNfmfAULQw==,type:str]
+    name: tofu-env
+    namespace: rokkitpokkit
+type: Opaque
 stringData: {}
 sops:
     age:
         - recipient: age1utf3jfmexu3zsfqphejlh8ptx7av09jdh9n305jaqwa5s0nqevxsja4r76
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBlVGxSZUhuOWpFekR5K2tk
-            bEg3Yi9NemJudXdNMHAzdlVUWGVpUStsc0ZJCmlsbGI4TmRwWGtrVldkR0ZjZmhZ
-            UDVVUkhNd3AyNnROcWJDQ3pqZVpEUHcKLS0tIExaWVpJelJaUkNQcG84YnFjNDdR
-            dDVhNzFob29MMHpNYVlkeVAvQnRPbXMKsFZ4J2O935pohlxZgxaiKs6261yu6WQw
-            GjUT0fxzonwaqv3Mj4s2JmMot6fT7+VaS1eDpcOfb9o/9SvPBQYN+g==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBvcTlYbmRUK3Zhb2FmYUdM
+            Z1RDaTAySHArcFFub1ljblhzNjdyUkhkMWdBCmxoNXp0NmNhZlhrY3FNVFYyZnhq
+            K0t2QmcyeEo3dzF0TUJOcjFqNXBtV28KLS0tIHY3WE5UN2d1aFJIYzg2Wkg2WXpJ
+            TCtRSmg1cHVFVkZkeG0xTkMvbU1PZncKfGlMgp6Vt/iy8KyaCTLYGs8MvdqmD3CS
+            vNZdLtSs1gDgXVO+JetoIvCU5SNevigg1WiDa/Ndd/w8MvXOMXRgkA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-03-23T01:23:13Z"
-    mac: ENC[AES256_GCM,data:dohQYEfHKmlMVtlhsbbud6ZPH5jwEBr8N677o7wtOrGEzAMjcoJIM9BRPPE+/GBnOzxJpMH2JrCmzu6xQOuSfLpcYzm9cFX4+gix/1uXCrmhC1T5pnJUA2x0EjPXtFBAYp9Kz7hRZTwdoyCq5j1XLSrHQMlkrFxGaHxuscbR5KY=,iv:5wkh1V/Vn3z60lF3H4VC+riKldqosfyjo8qeoZ1R+rA=,tag:qTf64v9RqpmFRmE4dYszEw==,type:str]
-    unencrypted_suffix: _unencrypted
+    lastmodified: "2026-03-23T04:01:00Z"
+    mac: ENC[AES256_GCM,data:LA5pWmvQhn92FpCbYtmsRV+Sm3TUI+Z+XKhsmUqAb5TK7tLgsYYSRk4PxrjDsizwFa+OWGuan1E5zC636Cc68NgXZLsV4hNjNsqEnSZLx6F2N9MR1dWRa7uJp6aekwTeu/vRa69umGv7r4AOsjdrdgdk9OHhMVeRIBS5Fhd5Zqk=,iv:N6FzgiFtCKPqViHIZuiz9KTVwUOEqC+r18k7U8O1yoc=,tag:aJkiOw/LjMjJs6K2F+uOqA==,type:str]
+    encrypted_regex: ^(data|stringData)$
     version: 3.11.0
