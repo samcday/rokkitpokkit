@@ -54,7 +54,7 @@ resource "kubernetes_secret" "pmos_storage" {
   }
 
   data = {
-    B2_PUBLIC_ORIGIN_HOST = data.b2_account_info.b2.download_url
+    B2_PUBLIC_ORIGIN_HOST = trimsuffix(trimprefix(data.b2_account_info.b2.download_url, "https://"), "/")
     B2_BUCKET             = var.b2_bucket_name
   }
 }
