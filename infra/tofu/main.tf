@@ -15,34 +15,22 @@ data "b2_bucket" "rokkitpokkit" {
   bucket_name = var.b2_bucket_name
 }
 
-resource "b2_application_key" "rokkitpokkit_upload" {
-  key_name = "rokkitpokkit-upload"
-  capabilities = [
-    "listBuckets",
-    "listFiles",
-    "readFiles",
-    "writeFiles",
-    "deleteFiles",
-  ]
-  bucket_ids = [data.b2_bucket.rokkitpokkit.bucket_id]
-}
-
 resource "github_actions_secret" "b2_access_key_id" {
   repository      = var.github_repo
   secret_name     = "B2_ACCESS_KEY_ID"
-  plaintext_value = b2_application_key.rokkitpokkit_upload.application_key_id
+  plaintext_value = var.b2_application_key_id
 }
 
 resource "github_actions_secret" "b2_secret_access_key" {
   repository      = var.github_repo
   secret_name     = "B2_SECRET_ACCESS_KEY"
-  plaintext_value = b2_application_key.rokkitpokkit_upload.application_key
+  plaintext_value = var.b2_application_key
 }
 
 resource "github_actions_secret" "b2_bucket" {
   repository      = var.github_repo
   secret_name     = "B2_BUCKET"
-  plaintext_value = data.b2_bucket.rokkitpokkit.bucket_name
+  plaintext_value = var.b2_bucket_name
 }
 
 resource "github_actions_secret" "b2_endpoint_url" {
