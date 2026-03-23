@@ -10,7 +10,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: rokkitpokkit
-    namespace: flux-system
   varsFrom:
     - name: tofu-vars
       kind: Secret

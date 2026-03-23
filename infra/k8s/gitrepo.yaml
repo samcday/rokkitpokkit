@@ -1,0 +1,13 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: rokkitpokkit
+spec:
+  ignore: |
+    /*
+    !/infra/
+    !/infra/**
+  interval: 5m
+  ref:
+    branch: main
+  url: https://github.com/samcday/rokkitpokkit.git

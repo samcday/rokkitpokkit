@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - caddy-config.yaml
   - deployment.yaml
+  - gitrepo.yaml
   - httproute.yaml
   - service.yaml
   - tofu-env.yaml
