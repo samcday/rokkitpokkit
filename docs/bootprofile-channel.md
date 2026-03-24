@@ -13,7 +13,7 @@ Boot profile channel objects are published under `channels/`:
 
 `step_build.yml` runs `scripts/bootprofile-channel.sh` after `scripts/casync-compose.sh` completes.
 
-`step_build.yml` also downloads `fastboop-cli` `v0.0.1-rc.2` from fastboop release
+`step_build.yml` also downloads `fastboop-cli` `v0.0.1-rc.11` from fastboop release
 artifacts, verifies the SHA256 digest, and passes it to
 `scripts/bootprofile-channel.sh` via `BOOT_PROFILE_CLI`.
 
@@ -33,7 +33,7 @@ The boot profile script:
 Boot profile compilation is delegated to `fastboop-cli`:
 
 - `BOOT_PROFILE_CLI` defaults to `fastboop-cli` from `PATH`.
-- CI sets `BOOT_PROFILE_CLI` to a pinned `v0.0.1-rc.2` release artifact.
+- CI sets `BOOT_PROFILE_CLI` to a pinned `v0.0.1-rc.11` release artifact.
 
 Publish uses the same B2 credentials as compose publication:
 
@@ -45,7 +45,7 @@ Publish uses the same B2 credentials as compose publication:
 ## Local dry-run
 
 ```bash
-FASTBOOP_CLI_VERSION=v0.0.1-rc.2
+FASTBOOP_CLI_VERSION=v0.0.1-rc.11
 
 case "$(uname -m)" in
   aarch64|arm64)
