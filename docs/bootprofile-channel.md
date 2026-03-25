@@ -50,11 +50,11 @@ FASTBOOP_CLI_VERSION=v0.0.1-rc.11
 case "$(uname -m)" in
   aarch64|arm64)
     FASTBOOP_CLI_TARGET=aarch64-unknown-linux-musl
-    FASTBOOP_CLI_SHA256=8875b929f8f668479fb2ceb691a727326e01fad23205886bd731f27663b598a2
+    FASTBOOP_CLI_SHA256=b576cef92a7ac109abf3bb34b485349cb3784d984dca271d03e1ab2ced12cb19
     ;;
   x86_64|amd64)
     FASTBOOP_CLI_TARGET=x86_64-unknown-linux-musl
-    FASTBOOP_CLI_SHA256=a45cbbecf007a50bf4c55bec3bb7f049bb6548b2cb171b78988ab52e0fd49d3a
+    FASTBOOP_CLI_SHA256=fcc84c98950164b30065c48262b78d9936bc4ed75656dd5a8aea16b00a92f7c1
     ;;
   *)
     echo "unsupported architecture: $(uname -m)" >&2

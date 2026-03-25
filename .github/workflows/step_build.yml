@@ -121,11 +121,11 @@ jobs:
           case "${RUNNER_ARCH}" in
             ARM64)
               FASTBOOP_CLI_TARGET="aarch64-unknown-linux-musl"
-              FASTBOOP_CLI_SHA256="81582bc1ba3022f6c4a9d80cec4f7375b45e07db9ae1ba63057202601810d047"
+              FASTBOOP_CLI_SHA256="b576cef92a7ac109abf3bb34b485349cb3784d984dca271d03e1ab2ced12cb19"
               ;;
             X64)
               FASTBOOP_CLI_TARGET="x86_64-unknown-linux-musl"
-              FASTBOOP_CLI_SHA256="1e529737b1effa01c5605f5ef9b8fffcb0e8a18cf5f8488980ef3dc62ea4240f"
+              FASTBOOP_CLI_SHA256="fcc84c98950164b30065c48262b78d9936bc4ed75656dd5a8aea16b00a92f7c1"
               ;;
             *)
               echo "unsupported runner architecture for fastboop-cli release asset: ${RUNNER_ARCH}" >&2
