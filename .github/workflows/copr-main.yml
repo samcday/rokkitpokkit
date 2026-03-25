@@ -1,0 +1,139 @@
+name: COPR (main)
+run-name: COPR main build (${{ github.sha }})
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - copr/anaconda/**
+      - copr/anaconda-webui/**
+      - copr/droid-juicer/**
+      - packit.yaml
+      - scripts/packit-fetch-source.sh
+
+permissions:
+  contents: read
+
+env:
+  COPR_TARGETS: fedora-rawhide-aarch64,fedora-rawhide-x86_64,fedora-44-aarch64,fedora-44-x86_64,fedora-43-aarch64,fedora-43-x86_64,fedora-42-aarch64,fedora-42-x86_64
+
+jobs:
+  detect-changes:
+    name: Detect changed package paths
+    runs-on: ubuntu-latest
+    outputs:
+      anaconda: ${{ steps.filter.outputs.anaconda }}
+      anaconda_webui: ${{ steps.filter.outputs.anaconda_webui }}
+      droid_juicer: ${{ steps.filter.outputs.droid_juicer }}
+      shared: ${{ steps.filter.outputs.shared }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            anaconda:
+              - 'copr/anaconda/**'
+            anaconda_webui:
+              - 'copr/anaconda-webui/**'
+            droid_juicer:
+              - 'copr/droid-juicer/**'
+            shared:
+              - 'packit.yaml'
+              - 'scripts/packit-fetch-source.sh'
+
+  copr-anaconda:
+    name: COPR anaconda
+    runs-on: ubuntu-latest
+    needs: [detect-changes]
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      needs.detect-changes.outputs.anaconda == 'true' ||
+      needs.detect-changes.outputs.shared == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install packit CLI
+        run: python3 -m pip install --user --break-system-packages packitos
+      - name: Configure copr-cli auth
+        env:
+          COPR_CONFIG: ${{ secrets.COPR_CONFIG }}
+        run: |
+          test -n "${COPR_CONFIG}"
+          mkdir -p "$HOME/.config"
+          printf '%s\n' "${COPR_CONFIG}" > "$HOME/.config/copr"
+          chmod 600 "$HOME/.config/copr"
+      - name: Build anaconda in COPR
+        run: |
+          "$HOME/.local/bin/packit" build in-copr \
+            --wait \
+            --owner samcday \
+            --project rokkitpokkit \
+            --preserve-project \
+            --targets "${COPR_TARGETS}" \
+            --additional-repos "copr://samcday/rokkitpokkit" \
+            -p anaconda
+
+  copr-anaconda-webui:
+    name: COPR anaconda-webui
+    runs-on: ubuntu-latest
+    needs: [detect-changes]
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      needs.detect-changes.outputs.anaconda_webui == 'true' ||
+      needs.detect-changes.outputs.shared == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install packit CLI
+        run: python3 -m pip install --user --break-system-packages packitos
+      - name: Configure copr-cli auth
+        env:
+          COPR_CONFIG: ${{ secrets.COPR_CONFIG }}
+        run: |
+          test -n "${COPR_CONFIG}"
+          mkdir -p "$HOME/.config"
+          printf '%s\n' "${COPR_CONFIG}" > "$HOME/.config/copr"
+          chmod 600 "$HOME/.config/copr"
+      - name: Build anaconda-webui in COPR
+        run: |
+          "$HOME/.local/bin/packit" build in-copr \
+            --wait \
+            --owner samcday \
+            --project rokkitpokkit \
+            --preserve-project \
+            --targets "${COPR_TARGETS}" \
+            --additional-repos "copr://samcday/rokkitpokkit" \
+            -p anaconda-webui
+
+  copr-droid-juicer:
+    name: COPR droid-juicer
+    runs-on: ubuntu-latest
+    needs: [detect-changes]
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      needs.detect-changes.outputs.droid_juicer == 'true' ||
+      needs.detect-changes.outputs.shared == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install packit CLI
+        run: python3 -m pip install --user --break-system-packages packitos
+      - name: Configure copr-cli auth
+        env:
+          COPR_CONFIG: ${{ secrets.COPR_CONFIG }}
+        run: |
+          test -n "${COPR_CONFIG}"
+          mkdir -p "$HOME/.config"
+          printf '%s\n' "${COPR_CONFIG}" > "$HOME/.config/copr"
+          chmod 600 "$HOME/.config/copr"
+      - name: Build droid-juicer in COPR
+        run: |
+          "$HOME/.local/bin/packit" build in-copr \
+            --wait \
+            --owner samcday \
+            --project rokkitpokkit \
+            --preserve-project \
+            --targets "${COPR_TARGETS}" \
+            --additional-repos "copr://samcday/rokkitpokkit" \
+            -p droid-juicer

@@ -63,43 +63,13 @@ jobs:
     identifier: anaconda-pr
 
   - <<: *copr_build_base
-    trigger: commit
-    branch: main
-    owner: samcday
-    project: rokkitpokkit
-    preserve_project: true
-    packages:
-      - anaconda
-    identifier: anaconda-main
-
-  - <<: *copr_build_base
     trigger: pull_request
     packages:
       - anaconda-webui
     identifier: anaconda-webui-pr
 
   - <<: *copr_build_base
-    trigger: commit
-    branch: main
-    owner: samcday
-    project: rokkitpokkit
-    preserve_project: true
-    packages:
-      - anaconda-webui
-    identifier: anaconda-webui-main
-
-  - <<: *copr_build_base
     trigger: pull_request
     packages:
       - droid-juicer
     identifier: droid-juicer-pr
-
-  - <<: *copr_build_base
-    trigger: commit
-    branch: main
-    owner: samcday
-    project: rokkitpokkit
-    preserve_project: true
-    packages:
-      - droid-juicer
-    identifier: droid-juicer-main

@@ -7,7 +7,8 @@ This directory keeps downstream patch stacks for packages built in
 
 - Packit config lives at `packit.yaml` in the repository root.
 - Current package paths are `copr/anaconda`, `copr/anaconda-webui`, and `copr/droid-juicer`.
-- Packit COPR builds run on pull requests and on commits to `main`.
+- Packit COPR builds run on pull requests.
+- Commits to `main` run COPR builds from GitHub Actions (`.github/workflows/copr-main.yml`) with path-based triggering.
 - Build targets are:
   - `fedora-rawhide-aarch64`, `fedora-rawhide-x86_64`
   - `fedora-44-aarch64`, `fedora-44-x86_64`
