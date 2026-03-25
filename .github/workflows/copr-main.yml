@@ -11,6 +11,7 @@ on:
       - copr/droid-juicer/**
       - packit.yaml
       - scripts/packit-fetch-source.sh
+      - .github/workflows/copr-main.yml
 
 permissions:
   contents: read
@@ -55,6 +56,16 @@ jobs:
       needs.detect-changes.outputs.shared == 'true'
     steps:
       - uses: actions/checkout@v4
+      - name: Install packit build dependencies
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            gcc \
+            python3-dev \
+            pkg-config \
+            libkrb5-dev \
+            libcurl4-openssl-dev \
+            libssl-dev
       - name: Install packit CLI
         run: python3 -m pip install --user --break-system-packages packitos
       - name: Configure copr-cli auth
@@ -86,6 +97,16 @@ jobs:
       needs.detect-changes.outputs.shared == 'true'
     steps:
       - uses: actions/checkout@v4
+      - name: Install packit build dependencies
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            gcc \
+            python3-dev \
+            pkg-config \
+            libkrb5-dev \
+            libcurl4-openssl-dev \
+            libssl-dev
       - name: Install packit CLI
         run: python3 -m pip install --user --break-system-packages packitos
       - name: Configure copr-cli auth
@@ -117,6 +138,16 @@ jobs:
       needs.detect-changes.outputs.shared == 'true'
     steps:
       - uses: actions/checkout@v4
+      - name: Install packit build dependencies
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            gcc \
+            python3-dev \
+            pkg-config \
+            libkrb5-dev \
+            libcurl4-openssl-dev \
+            libssl-dev
       - name: Install packit CLI
         run: python3 -m pip install --user --break-system-packages packitos
       - name: Configure copr-cli auth
