@@ -21,7 +21,7 @@ data:
         header {
           Access-Control-Allow-Origin *
           Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
-          Access-Control-Allow-Headers "Range, Content-Type, Accept"
+          Access-Control-Allow-Headers "Range, Content-Type, Accept, Priority"
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
           Vary Origin
         }
@@ -33,7 +33,7 @@ data:
         header {
           Access-Control-Allow-Origin *
           Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
-          Access-Control-Allow-Headers "Range, Content-Type, Accept"
+          Access-Control-Allow-Headers "Range, Content-Type, Accept, Priority"
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
           Vary Origin
         }
@@ -50,7 +50,7 @@ data:
         header {
           Access-Control-Allow-Origin *
           Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
-          Access-Control-Allow-Headers "Range, Content-Type, Accept"
+          Access-Control-Allow-Headers "Range, Content-Type, Accept, Priority"
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
           Vary Origin
         }
@@ -61,7 +61,7 @@ data:
         header {
           Access-Control-Allow-Origin *
           Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
-          Access-Control-Allow-Headers "Range, Content-Type, Accept"
+          Access-Control-Allow-Headers "Range, Content-Type, Accept, Priority"
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
           Vary Origin
         }
