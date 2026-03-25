@@ -6,9 +6,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - copr/anaconda/**
-      - copr/anaconda-webui/**
-      - copr/droid-juicer/**
+      - copr/**
       - packit.yaml
       - scripts/packit-fetch-source.sh
       - .github/workflows/copr-main.yml
@@ -24,10 +22,7 @@ jobs:
     name: Detect changed package paths
     runs-on: ubuntu-latest
     outputs:
-      anaconda: ${{ steps.filter.outputs.anaconda }}
-      anaconda_webui: ${{ steps.filter.outputs.anaconda_webui }}
-      droid_juicer: ${{ steps.filter.outputs.droid_juicer }}
-      shared: ${{ steps.filter.outputs.shared }}
+      packages: ${{ steps.matrix.outputs.packages }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,15 +40,33 @@ jobs:
             shared:
               - 'packit.yaml'
               - 'scripts/packit-fetch-source.sh'
+      - id: matrix
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ steps.filter.outputs.shared }}" = "true" ]; then
+            packages='["anaconda","anaconda-webui","droid-juicer"]'
+          else
+            packages="$(jq -cn --argjson changes '${{ steps.filter.outputs.changes }}' '
+              $changes
+              | map(
+                  if . == "anaconda_webui" then "anaconda-webui"
+                  elif . == "droid_juicer" then "droid-juicer"
+                  else .
+                  end
+                )
+            ')"
+          fi
 
-  copr-anaconda:
-    name: COPR anaconda
+          echo "packages=${packages}" >> "$GITHUB_OUTPUT"
+
+  copr-build:
+    name: COPR ${{ matrix.package }}
     runs-on: ubuntu-latest
     needs: [detect-changes]
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      needs.detect-changes.outputs.anaconda == 'true' ||
-      needs.detect-changes.outputs.shared == 'true'
+    if: needs.detect-changes.outputs.packages != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJSON(needs.detect-changes.outputs.packages) }}
     steps:
       - uses: actions/checkout@v4
       - name: Install packit build dependencies
@@ -76,7 +89,7 @@ jobs:
           mkdir -p "$HOME/.config"
           printf '%s\n' "${COPR_CONFIG}" > "$HOME/.config/copr"
           chmod 600 "$HOME/.config/copr"
-      - name: Build anaconda in COPR
+      - name: Build ${{ matrix.package }} in COPR
         run: |
           "$HOME/.local/bin/packit" build in-copr \
             --wait \
@@ -85,86 +98,4 @@ jobs:
             --preserve-project \
             --targets "${COPR_TARGETS}" \
             --additional-repos "copr://samcday/rokkitpokkit" \
-            -p anaconda
-
-  copr-anaconda-webui:
-    name: COPR anaconda-webui
-    runs-on: ubuntu-latest
-    needs: [detect-changes]
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      needs.detect-changes.outputs.anaconda_webui == 'true' ||
-      needs.detect-changes.outputs.shared == 'true'
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install packit build dependencies
-        run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            gcc \
-            python3-dev \
-            pkg-config \
-            libkrb5-dev \
-            libcurl4-openssl-dev \
-            libssl-dev
-      - name: Install packit CLI
-        run: python3 -m pip install --user --break-system-packages packitos
-      - name: Configure copr-cli auth
-        env:
-          COPR_CONFIG: ${{ secrets.COPR_CONFIG }}
-        run: |
-          test -n "${COPR_CONFIG}"
-          mkdir -p "$HOME/.config"
-          printf '%s\n' "${COPR_CONFIG}" > "$HOME/.config/copr"
-          chmod 600 "$HOME/.config/copr"
-      - name: Build anaconda-webui in COPR
-        run: |
-          "$HOME/.local/bin/packit" build in-copr \
-            --wait \
-            --owner samcday \
-            --project rokkitpokkit \
-            --preserve-project \
-            --targets "${COPR_TARGETS}" \
-            --additional-repos "copr://samcday/rokkitpokkit" \
-            -p anaconda-webui
-
-  copr-droid-juicer:
-    name: COPR droid-juicer
-    runs-on: ubuntu-latest
-    needs: [detect-changes]
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      needs.detect-changes.outputs.droid_juicer == 'true' ||
-      needs.detect-changes.outputs.shared == 'true'
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install packit build dependencies
-        run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            gcc \
-            python3-dev \
-            pkg-config \
-            libkrb5-dev \
-            libcurl4-openssl-dev \
-            libssl-dev
-      - name: Install packit CLI
-        run: python3 -m pip install --user --break-system-packages packitos
-      - name: Configure copr-cli auth
-        env:
-          COPR_CONFIG: ${{ secrets.COPR_CONFIG }}
-        run: |
-          test -n "${COPR_CONFIG}"
-          mkdir -p "$HOME/.config"
-          printf '%s\n' "${COPR_CONFIG}" > "$HOME/.config/copr"
-          chmod 600 "$HOME/.config/copr"
-      - name: Build droid-juicer in COPR
-        run: |
-          "$HOME/.local/bin/packit" build in-copr \
-            --wait \
-            --owner samcday \
-            --project rokkitpokkit \
-            --preserve-project \
-            --targets "${COPR_TARGETS}" \
-            --additional-repos "copr://samcday/rokkitpokkit" \
-            -p droid-juicer
+            -p "${{ matrix.package }}"
