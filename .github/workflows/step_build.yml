@@ -155,7 +155,7 @@ jobs:
 
       - name: Build image
         run: |
-          sudo mkosi -f --profile erofs-lz4,phosh,rawhide,droid-juicer,precompile-akmods,ostree
+          sudo mkosi -f --profile phosh,rawhide,droid-juicer,precompile-akmods,ostree
 
       - name: Normalize .ero artifact filename
         run: |
