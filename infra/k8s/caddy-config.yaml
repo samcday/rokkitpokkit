@@ -42,7 +42,29 @@ data:
       }
 
       @channels path /channels/*
+      @channels_preflight {
+        method OPTIONS
+        path /channels/*
+      }
+      handle @channels_preflight {
+        header {
+          Access-Control-Allow-Origin *
+          Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+          Access-Control-Allow-Headers "Range, Content-Type, Accept"
+          Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
+          Vary Origin
+        }
+        respond "" 204
+      }
+
       handle @channels {
+        header {
+          Access-Control-Allow-Origin *
+          Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+          Access-Control-Allow-Headers "Range, Content-Type, Accept"
+          Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
+          Vary Origin
+        }
         rewrite * /file/{$B2_BUCKET}{uri}
         reverse_proxy https://{$B2_PUBLIC_ORIGIN_HOST}
       }
