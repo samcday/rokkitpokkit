@@ -13,6 +13,8 @@ BOOT_PROFILE_CLI="${BOOT_PROFILE_CLI:-fastboop-cli}"
 SOURCE_FILE_OVERRIDE="${BOOT_PROFILE_SOURCE_FILE:-}"
 SOURCE_CASYNC_INDEX="${BOOT_PROFILE_SOURCE_CASYNC_INDEX:-}"
 SOURCE_CASYNC_CHUNK_STORE="${BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE:-}"
+SOURCE_CONTENT_DIGEST_OVERRIDE="${BOOT_PROFILE_SOURCE_CONTENT_DIGEST:-}"
+SOURCE_CONTENT_SIZE_OVERRIDE="${BOOT_PROFILE_SOURCE_CONTENT_SIZE_BYTES:-}"
 
 BOOT_PROFILE_PREFIX="${BOOT_PROFILE_PREFIX:-channels/builds}"
 STABLE_POINTER_KEY="${BOOT_PROFILE_STABLE_POINTER_KEY:-channels/stable.bootpro}"
@@ -99,11 +101,28 @@ mkdir -p "${OUTPUT_DIR}"
 SOURCE_KIND=""
 SOURCE_VALUE=""
 SOURCE_CHUNK_STORE=""
+SOURCE_CONTENT_DIGEST=""
+SOURCE_CONTENT_SIZE_BYTES=""
 
 if [[ -n "${SOURCE_CASYNC_INDEX//[[:space:]]/}" ]]; then
     SOURCE_KIND="casync"
     SOURCE_VALUE="${SOURCE_CASYNC_INDEX}"
     SOURCE_CHUNK_STORE="${SOURCE_CASYNC_CHUNK_STORE}"
+
+    SOURCE_CONTENT_DIGEST="${SOURCE_CONTENT_DIGEST_OVERRIDE}"
+    SOURCE_CONTENT_SIZE_BYTES="${SOURCE_CONTENT_SIZE_OVERRIDE}"
+
+    if [[ -z "${SOURCE_CONTENT_DIGEST}" || -z "${SOURCE_CONTENT_SIZE_BYTES}" ]]; then
+        if SOURCE_FILE="$(resolve_source_file)"; then
+            SOURCE_CONTENT_DIGEST="sha512:$(sha512sum "${SOURCE_FILE}" | cut -d' ' -f1)"
+            SOURCE_CONTENT_SIZE_BYTES="$(stat -c '%s' "${SOURCE_FILE}")"
+        fi
+    fi
+
+    if [[ -z "${SOURCE_CONTENT_DIGEST}" || -z "${SOURCE_CONTENT_SIZE_BYTES}" ]]; then
+        echo "casync source requires content metadata; set BOOT_PROFILE_SOURCE_FILE or BOOT_PROFILE_SOURCE_CONTENT_* overrides" >&2
+        exit 1
+    fi
 else
     if ! SOURCE_FILE="$(resolve_source_file)"; then
         exit 1
@@ -117,16 +136,21 @@ else
     fi
 fi
 
-python3 - "${BOOT_PROFILE_MANIFEST_PATH}" "${BOOT_PROFILE_ID}" "${BOOT_PROFILE_DISPLAY_NAME}" "${SOURCE_KIND}" "${SOURCE_VALUE}" "${SOURCE_CHUNK_STORE}" <<'PY'
+python3 - "${BOOT_PROFILE_MANIFEST_PATH}" "${BOOT_PROFILE_ID}" "${BOOT_PROFILE_DISPLAY_NAME}" "${SOURCE_KIND}" "${SOURCE_VALUE}" "${SOURCE_CHUNK_STORE}" "${SOURCE_CONTENT_DIGEST}" "${SOURCE_CONTENT_SIZE_BYTES}" <<'PY'
 import json
 import sys
 
-manifest_path, profile_id, display_name, source_kind, source_value, source_chunk_store = sys.argv[1:7]
+manifest_path, profile_id, display_name, source_kind, source_value, source_chunk_store, source_content_digest, source_content_size_bytes = sys.argv[1:9]
 
 if source_kind == "casync":
     casync = {"index": source_value}
     if source_chunk_store:
         casync["chunk_store"] = source_chunk_store
+    if source_content_digest and source_content_size_bytes:
+        casync["content"] = {
+            "digest": source_content_digest,
+            "size_bytes": int(source_content_size_bytes),
+        }
     source = {"casync": casync}
 elif source_kind == "file":
     source = {"file": source_value}
@@ -237,6 +261,8 @@ if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
         echo "boot_profile_source_kind=${SOURCE_KIND}"
         echo "boot_profile_source_value=${SOURCE_VALUE}"
         echo "boot_profile_source_chunk_store=${SOURCE_CHUNK_STORE}"
+        echo "boot_profile_source_content_digest=${SOURCE_CONTENT_DIGEST}"
+        echo "boot_profile_source_content_size_bytes=${SOURCE_CONTENT_SIZE_BYTES}"
         echo "boot_profile_key=${BOOT_PROFILE_KEY}"
         echo "boot_profile_s3=${BOOT_PROFILE_S3_COORD}"
         echo "boot_profile_url=${BOOT_PROFILE_PUBLIC_URL}"
