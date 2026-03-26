@@ -183,7 +183,7 @@ jobs:
           AWS_DEFAULT_REGION: auto
           COMPOSE_BUCKET: ${{ secrets.B2_BUCKET }}
           COMPOSE_ENDPOINT_URL: ${{ secrets.B2_ENDPOINT_URL }}
-          COMPOSE_PUBLIC_BASE_URL: https://rokkitpokkit.samcday.com
+          COMPOSE_PUBLIC_BASE_URL: https://cdn.rokkitpokkit.samcday.com
           COMPOSE_LOCAL_STORE_DIR: .casync-cache/store.castr
           COMPOSE_BASE_LINEAGE_REF: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
           COMPOSE_USE_SUDO: 1

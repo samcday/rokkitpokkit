@@ -93,7 +93,7 @@ export default {
     const isRef = pathname.startsWith("/casync/refs/");
     const cacheTtl = isChunk ? 31536000 : isRef ? 0 : 3600;
 
-    const cfOpts = isRef ? {} : { cacheTtl, cacheEverything: true };
+    const cfOpts = { cacheTtl, cacheEverything: true };
     const upstream = await fetch(s3Url, {
       method: request.method,
       headers: headersToSign,
