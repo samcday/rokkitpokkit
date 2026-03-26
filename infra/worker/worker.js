@@ -90,18 +90,21 @@ export default {
     await signV4(request.method, s3Url, headersToSign, env);
 
     const isChunk = pathname.startsWith("/casync/default.castr/");
-    const cacheTtl = isChunk ? 31536000 : 3600;
+    const isRef = pathname.startsWith("/casync/refs/");
+    const cacheTtl = isChunk ? 31536000 : isRef ? 0 : 3600;
 
+    const cfOpts = isRef ? {} : { cacheTtl, cacheEverything: true };
     const upstream = await fetch(s3Url, {
       method: request.method,
       headers: headersToSign,
-      cf: { cacheTtl, cacheEverything: true },
+      cf: cfOpts,
     });
 
     const resp = new Headers(upstream.headers);
     resp.set("Access-Control-Allow-Origin", "*");
     resp.set("Access-Control-Expose-Headers", CORS_HEADERS["Access-Control-Expose-Headers"]);
-    resp.set("Cache-Control", isChunk ? "public, max-age=31536000, immutable" : `public, max-age=${cacheTtl}`);
+    const cacheControl = isChunk ? "public, max-age=31536000, immutable" : isRef ? "no-cache" : "public, max-age=3600";
+    resp.set("Cache-Control", cacheControl);
 
     return new Response(upstream.body, { status: upstream.status, headers: resp });
   },
