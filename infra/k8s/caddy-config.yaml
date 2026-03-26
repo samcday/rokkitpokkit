@@ -23,6 +23,7 @@ data:
           Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
           Access-Control-Allow-Headers "Range, Content-Type, Accept, Priority"
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
+          Access-Control-Max-Age 86400
           Vary Origin
         }
         respond "" 204
@@ -52,6 +53,7 @@ data:
           Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
           Access-Control-Allow-Headers "Range, Content-Type, Accept, Priority"
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
+          Access-Control-Max-Age 86400
           Vary Origin
         }
         respond "" 204
