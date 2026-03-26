@@ -75,9 +75,9 @@ data:
         reverse_proxy https://{$B2_PUBLIC_ORIGIN_HOST}
       }
 
-      @stable path /stable
-      handle @stable {
-        redir /channels/stable.bootpro 302
+      @rawhide path /rawhide
+      handle @rawhide {
+        redir /channels/rawhide 302
       }
 
       respond "🚀📱" 200

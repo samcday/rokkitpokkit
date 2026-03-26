@@ -17,7 +17,7 @@ SOURCE_CONTENT_DIGEST_OVERRIDE="${BOOT_PROFILE_SOURCE_CONTENT_DIGEST:-}"
 SOURCE_CONTENT_SIZE_OVERRIDE="${BOOT_PROFILE_SOURCE_CONTENT_SIZE_BYTES:-}"
 
 BOOT_PROFILE_PREFIX="${BOOT_PROFILE_PREFIX:-channels/builds}"
-STABLE_POINTER_KEY="${BOOT_PROFILE_STABLE_POINTER_KEY:-channels/stable.bootpro}"
+STABLE_POINTER_KEY="${BOOT_PROFILE_STABLE_POINTER_KEY:-channels/rawhide}"
 
 PUBLIC_BASE_URL="${BOOT_PROFILE_PUBLIC_BASE_URL:-https://rokkitpokkit.samcday.com}"
 ENABLE_PUBLISH_RAW="${BOOT_PROFILE_ENABLE_PUBLISH:-0}"
@@ -183,7 +183,12 @@ elif ! command -v "${BOOT_PROFILE_CLI}" >/dev/null 2>&1; then
     exit 1
 fi
 
-"${BOOT_PROFILE_CLI}" bootprofile create "${BOOT_PROFILE_MANIFEST_PATH}" --output "${BOOT_PROFILE_PATH}"
+if [[ ! -f "./mkosi.output/rokkitpokkit.ero" ]]; then
+    echo "missing local optimize artifact: ./mkosi.output/rokkitpokkit.ero" >&2
+    exit 1
+fi
+
+"${BOOT_PROFILE_CLI}" bootprofile create "${BOOT_PROFILE_MANIFEST_PATH}" --output "${BOOT_PROFILE_PATH}" --optimize --local-artifact ./mkosi.output/rokkitpokkit.ero
 
 BOOT_PROFILE_SHA256="$(sha256sum "${BOOT_PROFILE_PATH}" | cut -d' ' -f1)"
 BOOT_PROFILE_BYTES="$(stat -c '%s' "${BOOT_PROFILE_PATH}")"
@@ -247,7 +252,7 @@ if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
             echo "- Boot profile: \`${BOOT_PROFILE_S3_COORD}\`"
         fi
         if [[ "${STABLE_POINTER_UPDATED}" == "1" && -n "${STABLE_POINTER_URL}" ]]; then
-            echo "- Stable pointer: \`${STABLE_POINTER_URL}\`"
+            echo "- Rawhide pointer: \`${STABLE_POINTER_URL}\`"
         fi
     } >> "${GITHUB_STEP_SUMMARY}"
 fi

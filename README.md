@@ -1,6 +1,6 @@
 # 🚀📱
 
-It all begins here: https://www.fastboop.win/?channel=https://rokkitpokkit.samcday.com/stable
+It all begins here: https://www.fastboop.win/?channel=https://rokkitpokkit.samcday.com/channels/rawhide
 
 rokkitpokkit is an opinionated set of patches on top of vanilla Fedora, to make it usable (and maybe even *useful* someday 😅) on pocket computers. The primary focus, at present, is SDM670 + SDM845 (but patches for any other platform are more than welcome!)
 

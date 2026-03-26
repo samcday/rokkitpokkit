@@ -7,7 +7,7 @@ Boot profile channel publication is independent from casync compose publication.
 Boot profile channel objects are published under `channels/`:
 
 - `channels/builds/<run>-<attempt>-<sha>.bootpro` - immutable boot profile binary per build
-- `channels/stable.bootpro` - mutable stable boot profile pointer updated by pushes to `main`
+- `channels/rawhide` - mutable rawhide boot profile pointer updated by pushes to `main`
 
 ## CI behavior
 
@@ -28,12 +28,13 @@ The boot profile script:
    - `rokkitpokkit.bootpro.sha256`
    - includes extra cmdline: `selinux=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60`
 3. Publishes the immutable boot profile object when publish is enabled.
-4. Updates `channels/stable.bootpro` on pushes to `main`.
+4. Updates `channels/rawhide` on pushes to `main`.
 
 Boot profile compilation is delegated to `fastboop-cli`:
 
 - `BOOT_PROFILE_CLI` defaults to `fastboop-cli` from `PATH`.
 - CI sets `BOOT_PROFILE_CLI` to a pinned `v0.0.1-rc.11` release artifact.
+- Boot profile creation runs with `--optimize --local-artifact ./mkosi.output/rokkitpokkit.ero`.
 
 Publish uses the same B2 credentials as compose publication:
 
