@@ -13,70 +13,14 @@ data:
     :80 {
       respond /healthz "ok" 200
 
-      @casync_preflight {
-        method OPTIONS
-        path /casync/*
-      }
-      handle @casync_preflight {
-        header {
-          Access-Control-Allow-Origin *
-          Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
-          Access-Control-Allow-Headers "Range, Content-Type, Accept, Priority"
-          Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
-          Access-Control-Max-Age 86400
-          Vary Origin
-        }
-        respond "" 204
-      }
-
-      @casync path /casync/*
-      handle @casync {
-        header {
-          Access-Control-Allow-Origin *
-          Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
-          Access-Control-Allow-Headers "Range, Content-Type, Accept, Priority"
-          Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
-          Vary Origin
-        }
-        reverse_proxy https://cdn.rokkitpokkit.samcday.com
-      }
-
-      @channels path /channels/*
-      @channels_preflight {
-        method OPTIONS
-        path /channels/*
-      }
-      handle @channels_preflight {
-        header {
-          Access-Control-Allow-Origin *
-          Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
-          Access-Control-Allow-Headers "Range, Content-Type, Accept, Priority"
-          Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
-          Access-Control-Max-Age 86400
-          Vary Origin
-        }
-        respond "" 204
-      }
-
-      handle @channels {
-        header {
-          Access-Control-Allow-Origin *
-          Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
-          Access-Control-Allow-Headers "Range, Content-Type, Accept, Priority"
-          Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
-          Vary Origin
-        }
-        reverse_proxy https://cdn.rokkitpokkit.samcday.com
-      }
-
-      @images path /images/*
-      handle @images {
-        reverse_proxy https://cdn.rokkitpokkit.samcday.com
+      @artifact_paths path /casync/* /channels/* /images/*
+      handle @artifact_paths {
+        redir https://cdn.rokkitpokkit.samcday.com{uri} 302
       }
 
       @rawhide path /rawhide
       handle @rawhide {
-        redir /channels/rawhide 302
+        redir https://cdn.rokkitpokkit.samcday.com/channels/rawhide 302
       }
 
       respond "🚀📱" 200
