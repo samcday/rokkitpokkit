@@ -1,5 +1,5 @@
-// Cloudflare Worker: R2-backed CDN for rokkitpokkit casync chunks and images.
-// Serves /casync/* and /images/* from an R2 bucket binding.
+// Cloudflare Worker: R2-backed CDN for rokkitpokkit artifacts.
+// Serves /casync/*, /images/*, and /channels/* from an R2 bucket binding.
 // Chunks are immutable and cached aggressively at the edge.
 
 const CORS_HEADERS = {
@@ -17,7 +17,7 @@ export default {
   async fetch(request, env, ctx) {
     const { pathname } = new URL(request.url);
 
-    if (!pathname.startsWith("/casync/") && !pathname.startsWith("/images/")) {
+    if (!pathname.startsWith("/casync/") && !pathname.startsWith("/images/") && !pathname.startsWith("/channels/")) {
       return new Response("Not Found", { status: 404 });
     }
 
@@ -31,12 +31,13 @@ export default {
 
     const isChunk = pathname.startsWith("/casync/default.castr/");
     const isRef = pathname.startsWith("/casync/refs/");
-    const cacheControl = isChunk ? "public, max-age=31536000, immutable" : isRef ? "no-cache" : "public, max-age=3600";
+    const isChannel = pathname.startsWith("/channels/");
+    const cacheControl = isChunk ? "public, max-age=31536000, immutable" : (isRef || isChannel) ? "no-cache" : "public, max-age=3600";
 
     // Edge cache handles Range slicing automatically (returns 206 from
     // a cached full response when Content-Length is present).
     const cache = caches.default;
-    if (!isRef && request.method === "GET") {
+    if (!isRef && !isChannel && request.method === "GET") {
       const cached = await cache.match(request);
       if (cached) return cached;
     }
@@ -76,7 +77,7 @@ export default {
     const response = new Response(object.body, { status: 200, headers });
 
     // Store full response; edge cache will slice it for future Range requests.
-    if (!isRef) {
+    if (!isRef && !isChannel) {
       ctx.waitUntil(cache.put(request, response.clone()));
     }
 

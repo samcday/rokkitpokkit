@@ -38,8 +38,7 @@ data:
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
           Vary Origin
         }
-        rewrite * /file/{$B2_BUCKET}{uri}
-        reverse_proxy https://{$B2_PUBLIC_ORIGIN_HOST}
+        reverse_proxy https://cdn.rokkitpokkit.samcday.com
       }
 
       @channels path /channels/*
@@ -67,14 +66,12 @@ data:
           Access-Control-Expose-Headers "Accept-Ranges, Content-Length, Content-Range, Content-Type, ETag, Last-Modified"
           Vary Origin
         }
-        rewrite * /file/{$B2_BUCKET}{uri}
-        reverse_proxy https://{$B2_PUBLIC_ORIGIN_HOST}
+        reverse_proxy https://cdn.rokkitpokkit.samcday.com
       }
 
       @images path /images/*
       handle @images {
-        rewrite * /file/{$B2_BUCKET}{uri}
-        reverse_proxy https://{$B2_PUBLIC_ORIGIN_HOST}
+        reverse_proxy https://cdn.rokkitpokkit.samcday.com
       }
 
       @rawhide path /rawhide

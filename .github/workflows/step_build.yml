@@ -223,11 +223,11 @@ jobs:
         env:
           BOOT_PROFILE_ENABLE_PUBLISH: ${{ steps.compose.outputs.compose_publish_enabled }}
           BOOT_PROFILE_CLI: ${{ steps.fastboop_cli.outputs.fastboop_cli_path }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.B2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: auto
-          BOOT_PROFILE_BUCKET: ${{ secrets.B2_BUCKET }}
-          BOOT_PROFILE_ENDPOINT_URL: ${{ secrets.B2_ENDPOINT_URL }}
+          BOOT_PROFILE_BUCKET: ${{ secrets.R2_BUCKET }}
+          BOOT_PROFILE_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
           BOOT_PROFILE_PUBLIC_BASE_URL: https://rokkitpokkit.samcday.com
           BOOT_PROFILE_SOURCE_FILE: ./mkosi.output/rokkitpokkit.ero
           BOOT_PROFILE_SOURCE_CASYNC_INDEX: ${{ steps.compose.outputs.compose_index_url }}
