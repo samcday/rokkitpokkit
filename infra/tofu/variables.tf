@@ -15,6 +15,23 @@ variable "b2_bucket_name" {
   description = "Backblaze B2 bucket name for published artifacts."
 }
 
+variable "r2_access_key_id" {
+  type        = string
+  description = "Cloudflare R2 S3 API access key ID for CI publishing."
+  sensitive   = true
+}
+
+variable "r2_secret_access_key" {
+  type        = string
+  description = "Cloudflare R2 S3 API secret access key for CI publishing."
+  sensitive   = true
+}
+
+variable "r2_bucket_name" {
+  type        = string
+  description = "Cloudflare R2 bucket name for casync artifacts."
+}
+
 variable "cloudflare_api_token" {
   type        = string
   description = "Cloudflare API token with Workers and DNS permissions."
