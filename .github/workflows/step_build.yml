@@ -228,7 +228,7 @@ jobs:
           AWS_DEFAULT_REGION: auto
           BOOT_PROFILE_BUCKET: ${{ secrets.R2_BUCKET }}
           BOOT_PROFILE_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
-          BOOT_PROFILE_PUBLIC_BASE_URL: https://rokkitpokkit.samcday.com
+          BOOT_PROFILE_PUBLIC_BASE_URL: https://cdn.rokkitpokkit.samcday.com
           BOOT_PROFILE_SOURCE_FILE: ./mkosi.output/rokkitpokkit.ero
           BOOT_PROFILE_SOURCE_CASYNC_INDEX: ${{ steps.compose.outputs.compose_index_url }}
           BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE: ${{ steps.compose.outputs.compose_chunk_prefix_url }}
