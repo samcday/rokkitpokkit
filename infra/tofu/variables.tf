@@ -1,20 +1,3 @@
-variable "b2_application_key_id" {
-  type        = string
-  description = "Backblaze B2 primary application key ID used by the b2 provider."
-  sensitive   = true
-}
-
-variable "b2_application_key" {
-  type        = string
-  description = "Backblaze B2 primary application key used by the b2 provider."
-  sensitive   = true
-}
-
-variable "b2_bucket_name" {
-  type        = string
-  description = "Backblaze B2 bucket name for published artifacts."
-}
-
 variable "r2_access_key_id" {
   type        = string
   description = "Cloudflare R2 S3 API access key ID for CI publishing."

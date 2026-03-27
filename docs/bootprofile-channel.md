@@ -36,12 +36,12 @@ Boot profile compilation is delegated to `fastboop-cli`:
 - CI sets `BOOT_PROFILE_CLI` to a pinned `v0.0.1-rc.11` release artifact.
 - Boot profile creation runs with `--optimize --local-artifact ./mkosi.output/rokkitpokkit.ero`.
 
-Publish uses the same B2 credentials as compose publication:
+Publish uses the same R2 credentials as compose publication:
 
-- `B2_ACCESS_KEY_ID`
-- `B2_SECRET_ACCESS_KEY`
-- `B2_BUCKET`
-- `B2_ENDPOINT_URL`
+- `R2_ACCESS_KEY_ID`
+- `R2_SECRET_ACCESS_KEY`
+- `R2_BUCKET`
+- `R2_ENDPOINT_URL`
 
 ## Local dry-run
 
@@ -86,8 +86,8 @@ export BOOT_PROFILE_BUCKET=...
 export BOOT_PROFILE_ENDPOINT_URL=...
 export BOOT_PROFILE_PUBLIC_BASE_URL=https://rokkitpokkit.samcday.com
 export BOOT_PROFILE_ENABLE_PUBLISH=1
-export BOOT_PROFILE_SOURCE_CASYNC_INDEX=https://rokkitpokkit.samcday.com/casync/compose-<build>.caibx
-export BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE=https://rokkitpokkit.samcday.com/casync/default.castr/
+export BOOT_PROFILE_SOURCE_CASYNC_INDEX=https://cdn.rokkitpokkit.samcday.com/casync/compose-<build>.caibx
+export BOOT_PROFILE_SOURCE_CASYNC_CHUNK_STORE=https://cdn.rokkitpokkit.samcday.com/casync/default.castr/
 export BOOT_PROFILE_CLI=./.tools/fastboop-cli
 ./scripts/bootprofile-channel.sh
 ```

@@ -32,10 +32,10 @@ Boot profile channel publishing is handled separately by `scripts/bootprofile-ch
 
 Publish is attempted on PR/main/dispatch only when standard repository secrets are available:
 
-- `B2_ACCESS_KEY_ID`
-- `B2_SECRET_ACCESS_KEY`
-- `B2_BUCKET`
-- `B2_ENDPOINT_URL`
+- `R2_ACCESS_KEY_ID`
+- `R2_SECRET_ACCESS_KEY`
+- `R2_BUCKET`
+- `R2_ENDPOINT_URL`
 
 Fork PRs without secrets still run build + integrity checks, but skip object-store publication.
 
@@ -64,7 +64,7 @@ export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
 export COMPOSE_BUCKET=...
 export COMPOSE_ENDPOINT_URL=...
-export COMPOSE_PUBLIC_BASE_URL=https://rokkitpokkit.samcday.com
+export COMPOSE_PUBLIC_BASE_URL=https://cdn.rokkitpokkit.samcday.com
 export COMPOSE_ENABLE_PUBLISH=1
 export COMPOSE_USE_SUDO=1
 ./scripts/casync-compose.sh
