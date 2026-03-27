@@ -177,12 +177,12 @@ jobs:
       - name: Build compose artifacts and validate casync integrity
         id: compose
         env:
-          COMPOSE_ENABLE_PUBLISH: ${{ (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && secrets.B2_BUCKET != '' && secrets.B2_ACCESS_KEY_ID != '' && secrets.B2_SECRET_ACCESS_KEY != '' && secrets.B2_ENDPOINT_URL != '' }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.B2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_SECRET_ACCESS_KEY }}
+          COMPOSE_ENABLE_PUBLISH: ${{ (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch') && secrets.R2_BUCKET != '' && secrets.R2_ACCESS_KEY_ID != '' && secrets.R2_SECRET_ACCESS_KEY != '' && secrets.R2_ENDPOINT_URL != '' }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: auto
-          COMPOSE_BUCKET: ${{ secrets.B2_BUCKET }}
-          COMPOSE_ENDPOINT_URL: ${{ secrets.B2_ENDPOINT_URL }}
+          COMPOSE_BUCKET: ${{ secrets.R2_BUCKET }}
+          COMPOSE_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
           COMPOSE_PUBLIC_BASE_URL: https://cdn.rokkitpokkit.samcday.com
           COMPOSE_LOCAL_STORE_DIR: .casync-cache/store.castr
           COMPOSE_BASE_LINEAGE_REF: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}

@@ -8,24 +8,9 @@ resource "cloudflare_workers_script" "cdn" {
   content    = file("${path.module}/../worker/worker.js")
   module     = true
 
-  secret_text_binding {
-    name = "B2_ACCESS_KEY_ID"
-    text = var.b2_application_key_id
-  }
-
-  secret_text_binding {
-    name = "B2_SECRET_ACCESS_KEY"
-    text = var.b2_application_key
-  }
-
-  plain_text_binding {
-    name = "B2_BUCKET"
-    text = var.b2_bucket_name
-  }
-
-  plain_text_binding {
-    name = "B2_ENDPOINT"
-    text = trimprefix(data.b2_account_info.b2.s3_api_url, "https://")
+  r2_bucket_binding {
+    name        = "BUCKET"
+    bucket_name = var.r2_bucket_name
   }
 }
 
