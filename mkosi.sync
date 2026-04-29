@@ -4,13 +4,50 @@ set -ueo pipefail
 SRCDIR="${SRCDIR:-$PWD}"
 FIRMWARE_REPO_URL="https://gitlab.com/sdm845-mainline/firmware-oneplus-sdm845"
 FIRMWARE_COMMIT="176ca713448c5237a983fb1f158cf3a5c251d775"
+DROID_JUICER_REPO_URL="https://github.com/samcday/droid-juicer"
+DROID_JUICER_BRANCH="rokkitpokkit"
 
-if [[ "${PROFILES:-}" == *"droid-juicer"* ]] && [[ "${PROFILES:-}" == *"sdm845-embedded-firmware"* ]]; then
-    echo "Profiles sdm845-embedded-firmware and droid-juicer are mutually exclusive." >&2
+profile_enabled() {
+    [[ ",${PROFILES:-}," == *",$1,"* ]]
+}
+
+is_git_checkout() {
+    git -C "$1" rev-parse --is-inside-work-tree >/dev/null 2>&1
+}
+
+if profile_enabled "droid-juicer" && profile_enabled "droid-juicer-local"; then
+    echo "Profiles droid-juicer and droid-juicer-local are mutually exclusive." >&2
     exit 1
 fi
 
-if [[ "${PROFILES:-}" == *"sdm845-embedded-firmware"* ]]; then
+if { profile_enabled "droid-juicer" || profile_enabled "droid-juicer-local"; } && profile_enabled "sdm845-embedded-firmware"; then
+    echo "Profiles sdm845-embedded-firmware and droid-juicer/droid-juicer-local are mutually exclusive." >&2
+    exit 1
+fi
+
+if profile_enabled "droid-juicer-local"; then
+    droid_juicer_dir="${SRCDIR}/droid-juicer"
+
+    if [[ -e "${droid_juicer_dir}" ]] && ! is_git_checkout "${droid_juicer_dir}"; then
+        echo "droid-juicer checkout exists but is not a git checkout: ${droid_juicer_dir}" >&2
+        exit 1
+    fi
+
+    if [[ ! -e "${droid_juicer_dir}" ]]; then
+        git clone --branch "${DROID_JUICER_BRANCH}" "${DROID_JUICER_REPO_URL}" "${droid_juicer_dir}"
+    else
+        current_branch="$(git -C "${droid_juicer_dir}" branch --show-current)"
+        if ! git -C "${droid_juicer_dir}" rev-parse --verify --quiet "refs/heads/${DROID_JUICER_BRANCH}" >/dev/null; then
+            git -C "${droid_juicer_dir}" fetch origin "${DROID_JUICER_BRANCH}"
+            git -C "${droid_juicer_dir}" checkout -B "${DROID_JUICER_BRANCH}" "origin/${DROID_JUICER_BRANCH}"
+        elif [[ "${current_branch}" != "${DROID_JUICER_BRANCH}" ]]; then
+            git -C "${droid_juicer_dir}" checkout "${DROID_JUICER_BRANCH}"
+        fi
+        git -C "${droid_juicer_dir}" pull --ff-only origin "${DROID_JUICER_BRANCH}"
+    fi
+fi
+
+if profile_enabled "sdm845-embedded-firmware"; then
     if [[ -d "${SRCDIR}/firmware-oneplus-sdm845/lib/firmware" ]]; then
         exit 0
     fi

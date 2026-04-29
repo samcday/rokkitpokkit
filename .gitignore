@@ -4,3 +4,4 @@ mkosi.builddir/
 .terraform/
 *.tfstate.backup
 mkosi.tools*
+droid-juicer/

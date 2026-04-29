@@ -71,6 +71,7 @@
             echo "  - phosh (Phosh mobile shell)"
             echo "  - ostree (Immutable ostree filesystem)"
             echo "  - droid-juicer (Android firmware extraction)"
+            echo "  - droid-juicer-local (Build droid-juicer from ./droid-juicer)"
             echo "  - sdm845-embedded-firmware (Snapdragon 845 firmware blobs)"
             echo "  - rawhide (Fedora Rawhide target)"
           '';
@@ -78,4 +79,3 @@
       }
     );
 }
-

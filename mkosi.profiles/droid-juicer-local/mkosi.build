@@ -1,0 +1,23 @@
+#!/bin/bash
+set -uexo pipefail
+
+if [[ "${container:-}" != "mkosi" ]]; then
+    exec mkosi-chroot "${CHROOT_SCRIPT}" "$@"
+fi
+
+source_dir="${SRCDIR}/droid-juicer"
+
+if [[ ! -f "${source_dir}/Cargo.toml" ]] || [[ ! -f "${source_dir}/droid-juicer.service" ]]; then
+    echo "Missing droid-juicer sources. Run mkosi.sync or enable the droid-juicer-local profile." >&2
+    exit 1
+fi
+
+cd "${source_dir}"
+
+export CARGO_TARGET_DIR="${BUILDDIR:-/tmp}/droid-juicer-target"
+
+cargo install --path . --root "${DESTDIR}/usr" --no-track
+
+install -Dpm 0644 droid-juicer.service "${DESTDIR}/usr/lib/systemd/system/droid-juicer.service"
+install -d -m 0755 "${DESTDIR}/etc/droid-juicer" "${DESTDIR}/usr/share/droid-juicer/configs"
+install -pm 0644 configs/*.toml "${DESTDIR}/usr/share/droid-juicer/configs/"
