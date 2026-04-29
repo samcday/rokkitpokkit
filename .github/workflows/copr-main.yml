@@ -78,7 +78,8 @@ jobs:
             pkg-config \
             libkrb5-dev \
             libcurl4-openssl-dev \
-            libssl-dev
+            libssl-dev \
+            python3-rpm
       - name: Install packit CLI
         run: python3 -m pip install --user --break-system-packages packitos
       - name: Configure copr-cli auth
