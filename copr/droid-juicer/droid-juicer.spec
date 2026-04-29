@@ -1,18 +1,16 @@
 %bcond check 1
 
 %global crate droid-juicer
-%global commit da250b747613a7f20650741cfc0fe76769aa6152
+%global branch rokkitpokkit
 
 Name:           %{crate}
 Version:        0.4.2
-Release:        0.2.%{commit}%{?dist}
+Release:        0.3.%{branch}%{?dist}
 Summary:        Extract firmware from Android vendor partitions
 
 License:        MIT
 URL:            https://github.com/samcday/%{crate}
-Source0:        %{url}/archive/%{commit}/%{crate}-%{commit}.tar.gz
-Patch0:         0001-firmware-reuse-already-mounted-partitions.patch
-Patch1:         0002-service-keep-oneshot-active-after-success.patch
+Source0:        %{url}/archive/refs/heads/%{branch}/%{crate}-%{branch}.tar.gz
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  systemd-rpm-macros
@@ -35,7 +33,7 @@ installs it into /lib/firmware, avoiding redistributing vendor blobs.
 %systemd_postun_with_restart droid-juicer.service
 
 %prep
-%autosetup -n %{crate}-%{commit} -p1
+%autosetup -n %{crate}-%{branch}
 %cargo_prep
 
 %generate_buildrequires
@@ -69,6 +67,9 @@ install -Dpm 0644 configs/*.toml %{buildroot}%{_datadir}/droid-juicer/configs/
 %{_datadir}/droid-juicer/configs/*.toml
 
 %changelog
+* Wed Apr 29 2026 Sam Day <me@samcday.com> - 0.4.2-0.3.rokkitpokkit
+- Build directly from the rokkitpokkit branch.
+
 * Wed Apr 29 2026 Sam Day <me@samcday.com> - 0.4.2-0.2.da250b747613a7f20650741cfc0fe76769aa6152
 - Backport mounted partition reuse fix.
 
