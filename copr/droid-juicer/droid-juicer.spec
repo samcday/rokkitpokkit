@@ -12,6 +12,7 @@ License:        MIT
 URL:            https://github.com/samcday/%{crate}
 Source0:        %{url}/archive/%{commit}/%{crate}-%{commit}.tar.gz
 Patch0:         0001-firmware-reuse-already-mounted-partitions.patch
+Patch1:         0002-service-keep-oneshot-active-after-success.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  systemd-rpm-macros

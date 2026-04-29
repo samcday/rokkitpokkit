@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Sam Day <me@samcday.com>
+Date: Wed, 29 Apr 2026 20:05:00 +1000
+Subject: [PATCH] service: keep oneshot active after success
+
+Keep droid-juicer.service active after extraction completes so later units
+that require it do not enqueue another extraction run during the same boot.
+
+Signed-off-by: Sam Day <me@samcday.com>
+
+diff --git a/droid-juicer.service b/droid-juicer.service
+index f361182..71becde 100644
+--- a/droid-juicer.service
++++ b/droid-juicer.service
+@@ -8,6 +8,7 @@ Before=plymouth-quit.service display-manager.service
+ 
+ [Service]
+ Type=oneshot
++RemainAfterExit=yes
+ Environment=RUST_LOG=debug
+ ExecStartPre=-/usr/bin/plymouth display-message --text="Extracting binary firmware..."
+ ExecStart=/usr/bin/droid-juicer
