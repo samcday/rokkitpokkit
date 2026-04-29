@@ -5,12 +5,13 @@
 
 Name:           %{crate}
 Version:        0.4.2
-Release:        0.1.%{commit}%{?dist}
+Release:        0.2.%{commit}%{?dist}
 Summary:        Extract firmware from Android vendor partitions
 
 License:        MIT
 URL:            https://github.com/samcday/%{crate}
 Source0:        %{url}/archive/%{commit}/%{crate}-%{commit}.tar.gz
+Patch0:         0001-firmware-reuse-already-mounted-partitions.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  systemd-rpm-macros
@@ -67,5 +68,8 @@ install -Dpm 0644 configs/*.toml %{buildroot}%{_datadir}/droid-juicer/configs/
 %{_datadir}/droid-juicer/configs/*.toml
 
 %changelog
+* Wed Apr 29 2026 Sam Day <me@samcday.com> - 0.4.2-0.2.da250b747613a7f20650741cfc0fe76769aa6152
+- Backport mounted partition reuse fix.
+
 * Tue Mar 17 2026 Sam Day <me@samcday.com> - 0.4.2-0.1.fcdd658a66428f296bcf0e12e94b5d1ac5bcb511
 - Build from samcday/droid-juicer GitHub main HEAD snapshot.
