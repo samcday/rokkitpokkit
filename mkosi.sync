@@ -8,7 +8,14 @@ DROID_JUICER_REPO_URL="https://github.com/samcday/droid-juicer"
 DROID_JUICER_BRANCH="rokkitpokkit"
 
 profile_enabled() {
-    [[ ",${PROFILES:-}," == *",$1,"* ]]
+    local profiles="${PROFILES:-}"
+    local profile
+
+    for profile in ${profiles//,/ }; do
+        [[ "${profile}" == "$1" ]] && return 0
+    done
+
+    return 1
 }
 
 is_git_checkout() {
