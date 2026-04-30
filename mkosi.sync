@@ -22,6 +22,10 @@ is_git_checkout() {
     git -C "$1" rev-parse --is-inside-work-tree >/dev/null 2>&1
 }
 
+has_droid_juicer_sources() {
+    [[ -f "$1/Cargo.toml" ]] && [[ -f "$1/droid-juicer.service" ]]
+}
+
 if profile_enabled "droid-juicer" && profile_enabled "droid-juicer-local"; then
     echo "Profiles droid-juicer and droid-juicer-local are mutually exclusive." >&2
     exit 1
@@ -35,12 +39,13 @@ fi
 if profile_enabled "droid-juicer-local"; then
     droid_juicer_dir="${SRCDIR}/droid-juicer"
 
+    # mkosi copies nested source trees into /work/src without their .git dirs.
     if [[ -e "${droid_juicer_dir}" ]] && ! is_git_checkout "${droid_juicer_dir}"; then
-        echo "droid-juicer checkout exists but is not a git checkout: ${droid_juicer_dir}" >&2
-        exit 1
-    fi
-
-    if [[ ! -e "${droid_juicer_dir}" ]]; then
+        if ! has_droid_juicer_sources "${droid_juicer_dir}"; then
+            echo "droid-juicer checkout exists but is not a usable source tree: ${droid_juicer_dir}" >&2
+            exit 1
+        fi
+    elif [[ ! -e "${droid_juicer_dir}" ]]; then
         git clone --branch "${DROID_JUICER_BRANCH}" "${DROID_JUICER_REPO_URL}" "${droid_juicer_dir}"
     else
         current_branch="$(git -C "${droid_juicer_dir}" branch --show-current)"
