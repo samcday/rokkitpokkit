@@ -73,6 +73,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            curl \
             gcc \
             python3-dev \
             pkg-config \
