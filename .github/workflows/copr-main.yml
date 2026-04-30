@@ -3,6 +3,17 @@ run-name: COPR main build (${{ github.sha }})
 
 on:
   workflow_dispatch:
+    inputs:
+      package:
+        description: Package to rebuild
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - anaconda
+          - anaconda-webui
+          - droid-juicer
   push:
     branches: [ main ]
     paths:
@@ -42,7 +53,14 @@ jobs:
               - 'scripts/packit-fetch-source.sh'
       - id: matrix
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ steps.filter.outputs.shared }}" = "true" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            package="${{ inputs.package }}"
+            if [ "${package}" = "all" ]; then
+              packages='["anaconda","anaconda-webui","droid-juicer"]'
+            else
+              packages="$(jq -cn --arg package "${package}" '[$package]')"
+            fi
+          elif [ "${{ steps.filter.outputs.shared }}" = "true" ]; then
             packages='["anaconda","anaconda-webui","droid-juicer"]'
           else
             packages="$(jq -cn --argjson changes '${{ steps.filter.outputs.changes }}' '
