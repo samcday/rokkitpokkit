@@ -42,32 +42,77 @@ if [[ ! -f "$ERO" ]]; then
     exit 1
 fi
 
+if [[ "$ERO" == /* ]]; then
+    ERO_REF="$ERO"
+else
+    ERO_REF="./${ERO#./}"
+fi
+
 DIGEST="sha512:$(sha512sum "$ERO" | cut -d' ' -f1)"
 SIZE_BYTES="$(stat -c '%s' "$ERO")"
 
 MANIFEST="$(mktemp "${TMPDIR:-/tmp}/bootprofile-XXXXXX.json")"
 trap 'rm -f "$MANIFEST"' EXIT
 
-cat > "$MANIFEST" <<EOF
-{
-  "id": "rokkitpokkit-local",
-  "display_name": "rokkitpokkit (local)",
-  "extra_cmdline": "selinux=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60",
-  "rootfs": {
-    "ostree": {
-      "erofs": {
-        "file": "./$ERO",
-        "content": {
-          "digest": "$DIGEST",
-          "size_bytes": $SIZE_BYTES
-        }
-      }
-    }
-  }
-}
-EOF
+python3 - "$MANIFEST" "$ERO_REF" "$DIGEST" "$SIZE_BYTES" <<'PY'
+import json
+import sys
 
-fastboop bootprofile create "$MANIFEST" -o "$OUTPUT" --optimize --local-artifact "./$ERO"
+manifest_path, source_file, digest, size_bytes = sys.argv[1:5]
+
+# UDC-any% list formerly carried by upstream DevPro stage0.kernel_modules.
+stage0_kernel_modules = [
+    "qcom-apcs-ipc-mailbox",
+    "qcom_hwspinlock",
+    "smem",
+    "qcom_smd",
+    "smd-rpm",
+    "rpm-proc",
+    "qcom-spmi-pmic",
+    "qcom_spmi-regulator",
+    "qcom_smd-regulator",
+    "ulpi",
+    "phy-qcom-usb-hs",
+    "extcon-usb-gpio",
+    "ci_hdrc_msm",
+    "dwc3",
+    "dwc3-qcom",
+    "dwc3-qcom-legacy",
+    "phy-qcom-qusb2",
+    "nvmem_qfprom",
+    "i2c-qcom-geni",
+    "pinctrl-sdm845",
+    "gcc-sdm845",
+    "qnoc-sdm845",
+    "gpucc-sdm845",
+]
+
+manifest = {
+    "id": "rokkitpokkit-local",
+    "display_name": "rokkitpokkit (local)",
+    "extra_cmdline": "selinux=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60",
+    "stage0": {
+        "kernel_modules": stage0_kernel_modules,
+    },
+    "rootfs": {
+        "ostree": {
+            "erofs": {
+                "file": source_file,
+                "content": {
+                    "digest": digest,
+                    "size_bytes": int(size_bytes),
+                },
+            },
+        },
+    },
+}
+
+with open(manifest_path, "w", encoding="utf-8") as f:
+    json.dump(manifest, f, indent=2, sort_keys=True)
+    f.write("\n")
+PY
+
+fastboop bootprofile create "$MANIFEST" -o "$OUTPUT" --optimize --local-artifact "$ERO_REF"
 
 echo "$OUTPUT (from $ERO)"
-echo "  fastboop boot $OUTPUT --local-artifact ./$ERO"
+echo "  fastboop boot $OUTPUT --local-artifact $ERO_REF"

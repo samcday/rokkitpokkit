@@ -142,6 +142,33 @@ import sys
 
 manifest_path, profile_id, display_name, source_kind, source_value, source_chunk_store, source_content_digest, source_content_size_bytes = sys.argv[1:9]
 
+# UDC-any% list formerly carried by upstream DevPro stage0.kernel_modules.
+stage0_kernel_modules = [
+    "qcom-apcs-ipc-mailbox",
+    "qcom_hwspinlock",
+    "smem",
+    "qcom_smd",
+    "smd-rpm",
+    "rpm-proc",
+    "qcom-spmi-pmic",
+    "qcom_spmi-regulator",
+    "qcom_smd-regulator",
+    "ulpi",
+    "phy-qcom-usb-hs",
+    "extcon-usb-gpio",
+    "ci_hdrc_msm",
+    "dwc3",
+    "dwc3-qcom",
+    "dwc3-qcom-legacy",
+    "phy-qcom-qusb2",
+    "nvmem_qfprom",
+    "i2c-qcom-geni",
+    "pinctrl-sdm845",
+    "gcc-sdm845",
+    "qnoc-sdm845",
+    "gpucc-sdm845",
+]
+
 if source_kind == "casync":
     casync = {"index": source_value}
     if source_chunk_store:
@@ -161,6 +188,9 @@ manifest = {
     "id": profile_id,
     "display_name": display_name,
     "extra_cmdline": "selinux=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60",
+    "stage0": {
+        "kernel_modules": stage0_kernel_modules,
+    },
     "rootfs": {
         "ostree": {
             "erofs": source,

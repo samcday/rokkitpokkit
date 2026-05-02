@@ -13,7 +13,7 @@ Boot profile channel objects are published under `channels/`:
 
 `step_build.yml` runs `scripts/bootprofile-channel.sh` after `scripts/casync-compose.sh` completes.
 
-`step_build.yml` also downloads `fastboop-cli` `v0.0.1-rc.11` from fastboop release
+`step_build.yml` also downloads `fastboop-cli` `v0.0.1-rc.19` from fastboop release
 artifacts, verifies the SHA256 digest, and passes it to
 `scripts/bootprofile-channel.sh` via `BOOT_PROFILE_CLI`.
 
@@ -27,13 +27,14 @@ The boot profile script:
    - `rokkitpokkit.bootpro`
    - `rokkitpokkit.bootpro.sha256`
    - includes extra cmdline: `selinux=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60`
+   - includes the UDC-any% `stage0.kernel_modules` list formerly carried by upstream DevPro
 3. Publishes the immutable boot profile object when publish is enabled.
 4. Updates `channels/rawhide` on pushes to `main`.
 
 Boot profile compilation is delegated to `fastboop-cli`:
 
 - `BOOT_PROFILE_CLI` defaults to `fastboop-cli` from `PATH`.
-- CI sets `BOOT_PROFILE_CLI` to a pinned `v0.0.1-rc.11` release artifact.
+- CI sets `BOOT_PROFILE_CLI` to a pinned `v0.0.1-rc.19` release artifact.
 - Boot profile creation runs with `--optimize --local-artifact ./mkosi.output/rokkitpokkit.ero`.
 
 Publish uses the same R2 credentials as compose publication:
@@ -46,16 +47,16 @@ Publish uses the same R2 credentials as compose publication:
 ## Local dry-run
 
 ```bash
-FASTBOOP_CLI_VERSION=v0.0.1-rc.11
+FASTBOOP_CLI_VERSION=v0.0.1-rc.19
 
 case "$(uname -m)" in
   aarch64|arm64)
     FASTBOOP_CLI_TARGET=aarch64-unknown-linux-musl
-    FASTBOOP_CLI_SHA256=a2b60001ab564d298f4c3f5475ea165a743afc0e46705cf9b2bb787f5be92456
+    FASTBOOP_CLI_SHA256=f0fdb23636c262bee5388c75e491d474a71ad1d7c72f69ac2667ca74caa867c4
     ;;
   x86_64|amd64)
     FASTBOOP_CLI_TARGET=x86_64-unknown-linux-musl
-    FASTBOOP_CLI_SHA256=f80a25fc0209b6c8a7f0ca39a9b9f06e69107ba9adc4485d4ef621a9118e0e1f
+    FASTBOOP_CLI_SHA256=af230253ef9ba2d57febc3ad58ce8899dedf9281e0ac0b3b2108558f62c86481
     ;;
   *)
     echo "unsupported architecture: $(uname -m)" >&2
