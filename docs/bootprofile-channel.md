@@ -27,6 +27,7 @@ The boot profile script:
    - `rokkitpokkit.bootpro`
    - `rokkitpokkit.bootpro.sha256`
    - includes extra cmdline: `selinux=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60`
+   - keeps SELinux disabled while Anaconda has a long tail of live-installer breakages; follow up once those are isolated
    - includes the UDC-any% `stage0.kernel_modules` list formerly carried by upstream DevPro
 3. Publishes the immutable boot profile object when publish is enabled.
 4. Updates `channels/rawhide` on pushes to `main`.

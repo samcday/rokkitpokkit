@@ -90,7 +90,8 @@ stage0_kernel_modules = [
 manifest = {
     "id": "rokkitpokkit-local",
     "display_name": "rokkitpokkit (local)",
-    "extra_cmdline": "selinux=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60",
+    # Keep SELinux disabled while Anaconda has a long tail of live-installer breakages.
+    "extra_cmdline": "enforcing=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60",
     "stage0": {
         "kernel_modules": stage0_kernel_modules,
     },
