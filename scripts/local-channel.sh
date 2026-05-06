@@ -87,12 +87,25 @@ stage0_kernel_modules = [
     "gpucc-sdm845",
 ]
 
+stage0_devices = {
+    device_id: {
+        "stage0": {
+            "inject_mac": {
+                "bluetooth": "qcom,wcn3990-bt",
+                "wifi": "qcom,wcn3990-wifi",
+            },
+        },
+    }
+    for device_id in ("oneplus-enchilada", "oneplus-fajita")
+}
+
 manifest = {
     "id": "rokkitpokkit-local",
     "display_name": "rokkitpokkit (local)",
     # Keep SELinux disabled while Anaconda has a long tail of live-installer breakages.
     "extra_cmdline": "enforcing=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60",
     "stage0": {
+        "devices": stage0_devices,
         "kernel_modules": stage0_kernel_modules,
     },
     "rootfs": {
