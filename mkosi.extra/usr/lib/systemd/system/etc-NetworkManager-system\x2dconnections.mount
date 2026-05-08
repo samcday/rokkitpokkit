@@ -8,7 +8,7 @@ Requires=persist-prepare-dirs.service
 After=persist-prepare-dirs.service
 
 [Mount]
-What=/var/lib/persist/NetworkManager/system-connections
+What=/var/lib/persist/rokkitpokkit/NetworkManager/system-connections
 Where=/etc/NetworkManager/system-connections
 Type=none
 Options=bind

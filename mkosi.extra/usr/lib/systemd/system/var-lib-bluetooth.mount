@@ -8,7 +8,7 @@ Requires=persist-prepare-dirs.service
 After=persist-prepare-dirs.service
 
 [Mount]
-What=/var/lib/persist/bluetooth
+What=/var/lib/persist/rokkitpokkit/bluetooth
 Where=/var/lib/bluetooth
 Type=none
 Options=bind

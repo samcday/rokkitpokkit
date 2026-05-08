@@ -9,8 +9,9 @@ After=var-lib-persist.mount
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/install -d -m 0755 /var/lib/persist/NetworkManager
-ExecStart=/usr/bin/install -d -m 0700 /var/lib/persist/NetworkManager/system-connections
-ExecStart=/usr/bin/install -d -m 0700 /var/lib/persist/bluetooth
+ExecStart=/usr/bin/install -d -m 0755 /var/lib/persist/rokkitpokkit
+ExecStart=/usr/bin/install -d -m 0755 /var/lib/persist/rokkitpokkit/NetworkManager
+ExecStart=/usr/bin/install -d -m 0700 /var/lib/persist/rokkitpokkit/NetworkManager/system-connections
+ExecStart=/usr/bin/install -d -m 0700 /var/lib/persist/rokkitpokkit/bluetooth
 ExecStart=/usr/bin/install -d -m 0700 /etc/NetworkManager/system-connections
 ExecStart=/usr/bin/install -d -m 0700 /var/lib/bluetooth
