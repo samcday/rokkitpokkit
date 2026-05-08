@@ -10,6 +10,7 @@ set -euo pipefail
 # Then boot with:
 #   fastboop boot mkosi.output/local.bootpro --local-artifact mkosi.output/ostree.ero
 
+fastboop=${FASTBOOP:-fastboop}
 ERO="${1:-}"
 OUTPUT="${LOCAL_CHANNEL_OUTPUT:-mkosi.output/local.bootpro}"
 
@@ -126,7 +127,7 @@ with open(manifest_path, "w", encoding="utf-8") as f:
     f.write("\n")
 PY
 
-fastboop bootprofile create "$MANIFEST" -o "$OUTPUT" --optimize --local-artifact "$ERO_REF"
+$fastboop bootprofile create "$MANIFEST" -o "$OUTPUT" --optimize --local-artifact "$ERO_REF"
 
 echo "$OUTPUT (from $ERO)"
 echo "  fastboop boot $OUTPUT --local-artifact $ERO_REF"
