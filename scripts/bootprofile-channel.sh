@@ -199,8 +199,8 @@ else:
 manifest = {
     "id": profile_id,
     "display_name": display_name,
-    # Keep SELinux disabled while Anaconda has a long tail of live-installer breakages.
-    "extra_cmdline": "enforcing=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60",
+    # Keep SELinux permissive while Anaconda live-installer breakages are isolated.
+    "extra_cmdline": "splash enforcing=0 init_on_alloc=0 fw_devlink=permissive deferred_probe_timeout=60",
     "stage0": {
         "devices": stage0_devices,
         "kernel_modules": stage0_kernel_modules,
