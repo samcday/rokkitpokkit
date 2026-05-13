@@ -113,19 +113,19 @@ jobs:
             echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           fi
 
-      - name: Download fastboop-cli v0.0.1-rc.19
+      - name: Download fastboop-cli
         id: fastboop_cli
         run: |
-          FASTBOOP_CLI_VERSION="v0.0.1-rc.19"
+          FASTBOOP_CLI_VERSION="v0.0.1-rc.21"
 
           case "${RUNNER_ARCH}" in
             ARM64)
               FASTBOOP_CLI_TARGET="aarch64-unknown-linux-musl"
-              FASTBOOP_CLI_SHA256="f0fdb23636c262bee5388c75e491d474a71ad1d7c72f69ac2667ca74caa867c4"
+              FASTBOOP_CLI_SHA256="b42a7a5fbbe1eb0826b7291e5fab23d0dd9339b7759ab2ae5f13ac1c54480f76"
               ;;
             X64)
               FASTBOOP_CLI_TARGET="x86_64-unknown-linux-musl"
-              FASTBOOP_CLI_SHA256="af230253ef9ba2d57febc3ad58ce8899dedf9281e0ac0b3b2108558f62c86481"
+              FASTBOOP_CLI_SHA256="b7b0e41d81ba15273e51287ea40aac9db8060d52715f1adb02b459097fb33bc7"
               ;;
             *)
               echo "unsupported runner architecture for fastboop-cli release asset: ${RUNNER_ARCH}" >&2

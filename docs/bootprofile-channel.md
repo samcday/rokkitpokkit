@@ -13,7 +13,7 @@ Boot profile channel objects are published under `channels/`:
 
 `step_build.yml` runs `scripts/bootprofile-channel.sh` after `scripts/casync-compose.sh` completes.
 
-`step_build.yml` also downloads `fastboop-cli` `v0.0.1-rc.19` from fastboop release
+`step_build.yml` also downloads `fastboop-cli` from fastboop release
 artifacts, verifies the SHA256 digest, and passes it to
 `scripts/bootprofile-channel.sh` via `BOOT_PROFILE_CLI`.
 
