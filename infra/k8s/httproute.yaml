@@ -9,7 +9,7 @@ spec:
     - xn--nu8h3y.samcday.com
   parentRefs:
     - name: shared
-      namespace: kube-system
+      namespace: nginx-gateway
   rules:
     - matches:
         - path:
