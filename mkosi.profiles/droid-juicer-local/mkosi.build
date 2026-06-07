@@ -14,7 +14,10 @@ fi
 
 cd "${source_dir}"
 
-export CARGO_TARGET_DIR="${BUILDDIR:-/tmp}/droid-juicer-target"
+export CARGO_HOME="${BUILDDIR}/cargo-home"
+export CARGO_TARGET_DIR="${BUILDDIR}/droid-juicer-target"
+
+mkdir -p "${CARGO_HOME}" "${CARGO_TARGET_DIR}"
 
 cargo install --path . --root "${DESTDIR}/usr" --no-track
 
