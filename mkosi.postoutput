@@ -3,13 +3,22 @@ set -uexo pipefail
 
 compress=
 
-if [[ "${PROFILES:-}" == *"erofs-lzma"* ]]; then
+profile_enabled() {
+    [[ " ${PROFILES:-} " == *" $1 "* ]]
+}
+
+if ! profile_enabled erofs; then
+    echo "erofs profile not enabled, skipping mkosi.output/image.ero generation"
+    exit 0
+fi
+
+if profile_enabled erofs-lzma; then
     compress=-zlzma
 fi
-if [[ "${PROFILES:-}" == *"erofs-zstd"* ]]; then
+if profile_enabled erofs-zstd; then
     compress=-zzstd
 fi
-if [[ "${PROFILES:-}" == *"erofs-lz4"* ]]; then
+if profile_enabled erofs-lz4; then
     compress=-zlz4
 fi
 
